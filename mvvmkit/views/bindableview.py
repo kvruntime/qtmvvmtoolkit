@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QWidget, QLineEdit, QLabel
-from .observableproperty import ObservableProperty
+from ..observables.observableproperty import ObservableProperty
 
 
 class BindableView(QObject):
@@ -12,10 +12,12 @@ class BindableView(QObject):
         match widget:
             case QLineEdit():
                 prop.valueChanged.connect(widget.setText)
-                widget.textChanged.connect(prop.set)
+                widget.textChanged.connect(prop.set)  # type:ignore
                 return
+
             case QLabel():
                 prop.valueChanged.connect(widget.setText)
+
             case _:
                 raise Exception("Not applicable")
         pass

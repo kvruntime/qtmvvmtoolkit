@@ -1,6 +1,6 @@
-from mvvmkit.observableproperty import ObservableProperty
-from mvvmkit.obervableobject import ObservableObject
-from mvvmkit.relaycommand import RelayCommand
+from mvvmkit.observables.observableproperty import ObservableProperty
+from mvvmkit.observables._ObservableObject import ObservableObject
+from mvvmkit.commands.relaycommand import RelayCommand
 
 
 class UserViewModel(ObservableObject):
