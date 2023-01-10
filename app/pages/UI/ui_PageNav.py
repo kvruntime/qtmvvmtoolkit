@@ -56,21 +56,33 @@ class Ui_PageNav(object):
         self.routeView.setFrameShape(QFrame.Box)
         self.page1 = QWidget()
         self.page1.setObjectName(u"page1")
+        self.horizontalLayout_2 = QHBoxLayout(self.page1)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.checkBox = QCheckBox(self.page1)
         self.checkBox.setObjectName(u"checkBox")
-        self.checkBox.setGeometry(QRect(75, 125, 74, 20))
+
+        self.horizontalLayout_2.addWidget(self.checkBox)
+
         self.routeView.addWidget(self.page1)
         self.page2 = QWidget()
         self.page2.setObjectName(u"page2")
+        self.horizontalLayout_3 = QHBoxLayout(self.page2)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.commandLinkButton = QCommandLinkButton(self.page2)
         self.commandLinkButton.setObjectName(u"commandLinkButton")
-        self.commandLinkButton.setGeometry(QRect(35, 125, 186, 41))
+
+        self.horizontalLayout_3.addWidget(self.commandLinkButton)
+
         self.routeView.addWidget(self.page2)
         self.page3 = QWidget()
         self.page3.setObjectName(u"page3")
+        self.horizontalLayout_4 = QHBoxLayout(self.page3)
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.radioButton = QRadioButton(self.page3)
         self.radioButton.setObjectName(u"radioButton")
-        self.radioButton.setGeometry(QRect(30, 115, 88, 20))
+
+        self.horizontalLayout_4.addWidget(self.radioButton)
+
         self.routeView.addWidget(self.page3)
         self.page4 = QWidget()
         self.page4.setObjectName(u"page4")
@@ -99,7 +111,7 @@ class Ui_PageNav(object):
 
         self.retranslateUi(PageNav)
 
-        self.routeView.setCurrentIndex(2)
+        self.routeView.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(PageNav)
@@ -107,7 +119,7 @@ class Ui_PageNav(object):
 
     def retranslateUi(self, PageNav):
         PageNav.setWindowTitle(QCoreApplication.translate("PageNav", u"Form", None))
-        self.groupBoxNavArea.setTitle(QCoreApplication.translate("PageNav", u"GroupBox", None))
+        self.groupBoxNavArea.setTitle(QCoreApplication.translate("PageNav", u"NavBar", None))
         self.buttonPage4.setText(QCoreApplication.translate("PageNav", u"Page4", None))
         self.checkBox.setText(QCoreApplication.translate("PageNav", u"CheckBox", None))
         self.commandLinkButton.setText(QCoreApplication.translate("PageNav", u"CommandLinkButton", None))

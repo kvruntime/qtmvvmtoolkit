@@ -5,24 +5,24 @@ from PyQt6.QtCore import QObject
 
 
 class StackWidgetRouter(Router):
-    def __init__(self, target: QStackedWidget) -> None:
-        super().__init__(target)
-        self.target = target
+    def __init__(self, outlet: QStackedWidget) -> None:
+        super().__init__(outlet)
+        self.outlet = outlet
         self.routes: Dict[str, QWidget] = {}
         pass
 
-    def register_route(self, path: str, element: QObject):
+    def registerRoute(self, path: str, element: QObject):
         self.routes[path] = element  # type: ignore
         return None
 
-    def navigate_to(self, path: str):
+    def goTo(self, path: str):
         _page = self.routes.get(path)
         if _page:
-            self.target.setCurrentWidget(_page)
+            self.outlet.setCurrentWidget(_page)
         return None
     
-    def next(self):
+    def goToNext(self):
         return None
     
-    def previous(self):
+    def goToPrevious(self):
         return None

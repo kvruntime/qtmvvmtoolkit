@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QWidget, QLineEdit, QLabel
-from ..observables.observableproperty import ObservableProperty
+from mvvmkit.observables.observableproperty import ObservableProperty
 
 
 class BindableView(QObject):

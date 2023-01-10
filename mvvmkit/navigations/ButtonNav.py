@@ -15,7 +15,7 @@ class NavButton(QPushButton):
 
     def _changePage(self):
         if self.router:
-            self.router.navigate_to(self.path)
+            self.router.goTo(self.path)
         return None
 
     def _binds(self):

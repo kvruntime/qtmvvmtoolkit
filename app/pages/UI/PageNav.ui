@@ -17,7 +17,7 @@
    <item>
     <widget class="QGroupBox" name="groupBoxNavArea">
      <property name="title">
-      <string>GroupBox</string>
+      <string>NavBar</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -52,52 +52,40 @@
       <enum>QFrame::Box</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="page1">
-      <widget class="QCheckBox" name="checkBox">
-       <property name="geometry">
-        <rect>
-         <x>75</x>
-         <y>125</y>
-         <width>74</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>CheckBox</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QCheckBox" name="checkBox">
+         <property name="text">
+          <string>CheckBox</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="page2">
-      <widget class="QCommandLinkButton" name="commandLinkButton">
-       <property name="geometry">
-        <rect>
-         <x>35</x>
-         <y>125</y>
-         <width>186</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>CommandLinkButton</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QCommandLinkButton" name="commandLinkButton">
+         <property name="text">
+          <string>CommandLinkButton</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="page3">
-      <widget class="QRadioButton" name="radioButton">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>115</y>
-         <width>88</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>RadioButton</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QRadioButton" name="radioButton">
+         <property name="text">
+          <string>RadioButton</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="page4">
       <layout class="QGridLayout" name="gridLayout">

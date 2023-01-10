@@ -13,17 +13,17 @@ class Router(ABC):
         pass
 
     @abstractmethod
-    def register_route(self, path: str, element: QWidget):
+    def registerRoute(self, path: str, element: QWidget):
         return None
 
     @abstractmethod
-    def navigate_to(self, path: str):
+    def goTo(self, path: str):
         pass
     
     @abstractmethod
-    def next(self):
+    def goToNext(self):
         pass
 
     @abstractmethod
-    def previous(self):
+    def goToPrevious(self):
         pass
