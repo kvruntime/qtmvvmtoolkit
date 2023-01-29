@@ -1,7 +1,7 @@
 from .UI.UIPageNav import Ui_PageNav
 from PyQt6.QtWidgets import QWidget
-from mvvmkit.navigations.StackWidgetRouter import StackWidgetRouter
-from mvvmkit.navigations.ButtonNav import NavButton
+from qtmvvmkit.navigations.StackWidgetRouter import StackWidgetRouter
+from qtmvvmkit.widgets.navbutton import NavButton
 
 
 class PageNav(Ui_PageNav, QWidget):
@@ -19,9 +19,9 @@ class PageNav(Ui_PageNav, QWidget):
         self.buttonPage1 = NavButton(text="Page1",router= self.router,path= "page1")
         self.buttonPage2 = NavButton(text="Page2",router= self.router,path= "page2")
         self.buttonPage3 = NavButton(text="Page3",router= self.router,path= "page3")
-        self.buttonPage4.addRouter(self.router)
+        self.buttonPage4.add_router(self.router)
         self.buttonPage4.setText("-Page4-")
-        self.buttonPage4.setPath("/page4")
+        self.buttonPage4.set_path("/page4")
         self.layoutNavBar.addWidget(self.buttonPage1)
         self.layoutNavBar.addWidget(self.buttonPage2)
         self.layoutNavBar.addWidget(self.buttonPage3)

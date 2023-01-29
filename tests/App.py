@@ -6,8 +6,8 @@ class App(QApplication):
     def __init__(self):
         super().__init__(sys.argv)
         self.appShell=AppShell()
-        self.appShell.show()
         pass
 
     def launch(self):
+        self.appShell.show()
         sys.exit(self.exec())
