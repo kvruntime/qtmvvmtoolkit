@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject
-from PySide6.QtWidgets import QWidget, QLineEdit, QLabel
-from mvvmkit.observables.observableproperty import ObservableProperty
+from PySide6.QtWidgets import QWidget, QLineEdit, QLabel, QComboBox
+from qtmvvmkit.observables.properties.observableproperty import ObservableProperty
 
 
 class BindableView(QObject):
@@ -21,3 +21,7 @@ class BindableView(QObject):
             case _:
                 raise Exception("Not applicable")
         pass
+    
+    def bindComboBoxItems(self, prop:ObservableProperty, widget:QComboBox):
+        prop.valueChanged.connect(widget.addItems)
+        return None

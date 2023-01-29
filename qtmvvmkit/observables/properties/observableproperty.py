@@ -1,4 +1,5 @@
-from PySide6.QtCore import Signal, QObject
+from PyQt6.QtCore import pyqtSignal as Signal, QObject
+import typing
 
 
 class ObservableProperty(QObject):
@@ -6,7 +7,7 @@ class ObservableProperty(QObject):
 
     def __init__(self, prop) -> None:
         super().__init__()
-        self.prop = prop
+        self.prop: typing.Any
         self.set(prop)
         pass
 
@@ -17,5 +18,4 @@ class ObservableProperty(QObject):
         if value != self.prop:
             self.prop = value
             self.valueChanged.emit(self.prop)
-            return
         return

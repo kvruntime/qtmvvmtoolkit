@@ -1,8 +1,5 @@
 from qdarktheme import load_stylesheet
-
 from .App import App
-
-
 class Program:
     def __init__(self) -> None:
         self.app = App()

@@ -1,4 +1,4 @@
-from PySide6.QtCore import QObject
+from PyQt6.QtCore import QObject
 
 
 class ObservableObject(QObject):
