@@ -1,7 +1,7 @@
 from .UI.ui_MainPage import Ui_Form
 from PySide6.QtWidgets import QWidget
 from viewmodels.userviewmodel import UserViewModel
-from qtmvvmkit.views.bindableview import BindableView
+from qtmvvmkit.widgets.bindableview import BindableView
 
 
 class MainPage(QWidget, Ui_Form, BindableView):

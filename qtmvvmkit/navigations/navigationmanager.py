@@ -1,10 +1,27 @@
+import typing
+from PyQt6.QtWidgets import QWidget, QStackedWidget
 
 
 class NavigationManager:
-    
-    def goto(self):
+
+    def __init__(
+        self,
+        outlet: QStackedWidget,
+        routes: typing.Optional[typing.Dict] = None
+    ) -> None:
+        self._outlet = outlet
+        self._routes: typing.Dict = routes or {} 
+        pass
+
+    def goto(self, path:str):
+        element = self._routes.get(path)
+        if element:
+            self._outlet.setCurrentWidget(element)
         return None
-    
-    def register_page(self):
+
+    def register_route(self, *, path: str, element: QWidget):
+        if not path or not element:
+            return None
+        self._routes[path]=element
         return None
     pass

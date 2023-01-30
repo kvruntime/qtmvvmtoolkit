@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QPushButton, QWidget, QToolButton
-from typing import Optional
-from qtmvvmkit.navigations.router import Router
+import typing
+from PyQt6.QtWidgets import QPushButton, QWidget
+from qtmvvmkit.navigations.navigationmanager import NavigationManager
 from pathlib import Path
 from PyQt6.QtGui import QIcon
 
@@ -8,36 +8,37 @@ from PyQt6.QtGui import QIcon
 class NavButton(QPushButton):
     def __init__(
         self,
-        parent: Optional[QWidget] = None,
+        parent: typing.Optional[QWidget] = None,
         *,
         text: str = "",
-        router: Router | None = None,
+        router: NavigationManager | None = None,
         path: str = "",
-        icon_path: Path = Path()
+        icon_path: typing.Optional[Path] = None
     ):
         super().__init__()
-        self.setParent(parent) if parent else None
+        self.setParent(parent)  # type: ignore FIXME: fix element assignation
         self.setText(text)
-        self.router = router
-        self.path = path
+        self._navigation_manager = router
+        self._path = path
+        # type: ignore FIXME: fix element assignation
         self.setIcon(QIcon(icon_path.as_posix()))
 
         self._binds()
         pass
 
-    def _change_page(self):
-        if self.router:
-            self.router.goTo(self.path)
+    def _goto(self):
+        if self._navigation_manager:
+            self._navigation_manager.goto(self._path)
         return None
 
-    def _binds(self):
-        self.clicked.connect(self._change_page)
-        return None
-
-    def add_router(self, router: Router):
-        self.router = router
+    def set_navigation_manager(self, navigation_manager: NavigationManager):
+        self._navigation_manager = navigation_manager
         return
 
     def set_path(self, path: str):
-        self.path = path
+        self._path = path
+        return None
+
+    def _binds(self):
+        self.clicked.connect(self._goto)
         return None
