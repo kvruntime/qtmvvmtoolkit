@@ -1,11 +1,22 @@
-from qtmvvmkit.observables.properties.observableproperty import ObservableProperty
+from PyQt6.QtCore import QObject
+from PyQt6.QtCore import pyqtSignal
+import typing
 
 
-class ObservaleStrProperty(ObservableProperty):
-    def __init__(self, prop: str) -> None:
-        super().__init__(prop)
+class ObservableStrProperty(QObject):
+    valueChanged = pyqtSignal(str, name="valueChanged")
+
+    def __init__(self, prop: str = "") -> None:
+        super().__init__()
+        self.prop: str = prop
+        self.set(prop)
         pass
 
+    def get(self):
+        return self.prop
+
     def set(self, value: str):
-        return super().set(str(value))
-    pass
+        if value != self.prop:
+            self.prop = value
+            self.valueChanged.emit(self.prop)
+        return

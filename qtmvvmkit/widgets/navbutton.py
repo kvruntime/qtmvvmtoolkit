@@ -21,7 +21,7 @@ class NavButton(QPushButton):
         self._navigation_manager = router
         self._path = path
         # type: ignore FIXME: fix element assignation
-        self.setIcon(QIcon(icon_path.as_posix()))
+        self.setIcon(QIcon(icon_path.as_posix())) if icon_path else None
 
         self._binds()
         pass

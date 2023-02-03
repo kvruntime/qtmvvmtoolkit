@@ -1,4 +1,4 @@
 from .observableproperty import ObservableProperty
-from .intproperty import ObservaleIntProperty
-from .strproperty import ObservaleStrProperty
-from .listproperty import ObservableListProperty
+from .floatproperty import ObservableFloatProperty
+from .intproperty import ObservableIntProperty
+from .strproperty import ObservableStrProperty
