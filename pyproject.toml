@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qtmvvmkit"
+authors = [
+    {name = "", email = "email@email.com"},
+]
+description = "Description here..."
+readme = "README.md"
+requires-python = ">=3.7"
+keywords = ["one", "two"]
+license = {file = "LICENCE"}
+
+classifiers = [
+    "Framework :: Django",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "requests",
+    'importlib-metadata; python_version<"3.8"',
+]
+dynamic = ["version"]
+
