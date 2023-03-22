@@ -1,15 +1,21 @@
 import typing
 from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import (
-    QWidget, QLineEdit, QLabel, QComboBox, QPushButton, QToolButton)
+    QWidget, QLineEdit, QLabel, QComboBox, QPushButton, QToolButton
+)
 from qtmvvmkit.observables.properties import (
-    ObservableProperty, ObservableIntProperty, ObservableFloatProperty)
+    ObservableProperty, ObservableIntProperty, ObservableFloatProperty
+)
 
 
-class BindableView(QWidget):
+class BindableObject(QObject):
     def __init__(self, parent: typing.Optional[QWidget] = None):
         super().__init__(parent)
         pass
+    
+    def binding(self, widget:QWidget, prop:str, observable:ObservableProperty)->None:
+        # Implement this method
+        return None
 
     def bind_entry_to_str(self, prop: ObservableFloatProperty, widget: QLineEdit) -> None:
         prop.valueChanged[str].connect(widget.setText)
