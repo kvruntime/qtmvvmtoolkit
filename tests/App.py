@@ -1,13 +1,16 @@
 import sys
-from PyQt6.QtWidgets import QApplication
-from .AppShell import AppShell
+import typing
+from PyQt6.QtWidgets import QApplication, QMainWindow
+import context
+context.__file__
+
 
 class App(QApplication):
-    def __init__(self):
+    def __init__(self, appshell: typing.Type[QMainWindow]):
         super().__init__(sys.argv)
-        self.appShell=AppShell()
+        self.appShell = appshell()
+        self.appShell.show()
         pass
 
     def launch(self):
-        self.appShell.show()
         sys.exit(self.exec())
