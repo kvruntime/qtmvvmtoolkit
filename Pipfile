@@ -4,8 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+pyqt6 = "6.4.2"
+pyqtdarktheme = "2.1.0"
 
 [dev-packages]
+mypy = "1.1.1"
 
 [requires]
 python_version = "3.10"
