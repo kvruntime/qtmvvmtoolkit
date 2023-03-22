@@ -3,7 +3,7 @@ from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import (
     QWidget, QLineEdit, QLabel, QComboBox, QPushButton, QToolButton
 )
-from qtmvvmkit.observables.properties import (
+from qtmvvmtoolkit.observables.properties import (
     ObservableProperty, ObservableIntProperty, ObservableFloatProperty
 )
 

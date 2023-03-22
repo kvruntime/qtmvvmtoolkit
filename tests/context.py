@@ -7,8 +7,8 @@ def register_package():
         0,
         Path(__file__).parent.parent.joinpath("src").as_posix()
     )
-    import qtmvvmkit
-    qtmvvmkit.__file__
+    import qtmvvmtoolkit
+    qtmvvmtoolkit.__file__
     return None
 
 

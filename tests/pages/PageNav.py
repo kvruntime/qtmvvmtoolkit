@@ -1,7 +1,7 @@
 from .UI.UIPageNav import Ui_PageNav
 from PyQt6.QtWidgets import QWidget
 from qtmvvmkit.navigations.StackWidgetRouter import StackWidgetRouter
-from qtmvvmkit.widgets.navbutton import NavButton
+from qtmvvmtoolkit.widgets.navbutton import NavButton
 
 
 class PageNav(Ui_PageNav, QWidget):
