@@ -1,8 +1,12 @@
-# pyside-mvvm
+# qtmvvmtoolkit
+
+## Description
+
 Build MVVM software pattern for PySide6
 
-## Lauch example application
 
-```python
-python ExampleApp.py
+## How build
+
+```pwsh
+  pyhton -m build
 ```
