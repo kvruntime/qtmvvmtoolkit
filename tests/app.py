@@ -3,9 +3,10 @@ import typing
 from PyQt6.QtWidgets import QApplication, QMainWindow
 import context
 context.__file__
+from qtmvvmtoolkit.widgets import BaseApp
 
 
-class App(QApplication):
+class App(BaseApp):
     def __init__(self, appshell: typing.Type[QMainWindow]):
         super().__init__(sys.argv)
         self.appShell = appshell()
