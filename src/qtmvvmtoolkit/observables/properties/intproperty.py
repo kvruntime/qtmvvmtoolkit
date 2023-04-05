@@ -1,6 +1,6 @@
 from typing import Type
 import typing
-from .observableproperty import ObservableProperty, ComputedObservableProperty, T
+from .observableproperty import ObservableProperty, ComputedObservableProperty
 
 
 class ObservableIntProperty(ObservableProperty[int]):
@@ -10,7 +10,7 @@ class ObservableIntProperty(ObservableProperty[int]):
         pass
 
 
-class ComputedIntObservableProperty(ComputedObservableProperty[int]):
+class ComputedObservableIntProperty(ComputedObservableProperty[int]):
     def __init__(
             self,
             value: Type[int],

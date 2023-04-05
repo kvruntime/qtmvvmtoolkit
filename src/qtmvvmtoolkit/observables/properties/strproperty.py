@@ -1,5 +1,7 @@
+import typing
 from typing import Type
-from .observableproperty import ObservableProperty
+
+from .observableproperty import ComputedObservableProperty, ObservableProperty
 
 
 class ObservableStrProperty(ObservableProperty[str]):
@@ -9,3 +11,13 @@ class ObservableStrProperty(ObservableProperty[str]):
         pass
 
 
+class ComputedObservableStrProperty(ComputedObservableProperty[str]):
+    def __init__(
+            self,
+            value: Type[str],
+            observable_props: typing.List[ObservableProperty],
+            update_function: typing.Callable[..., Type[str]]
+    ) -> None:
+        super().__init__(value, observable_props, update_function, item=float)
+
+    pass

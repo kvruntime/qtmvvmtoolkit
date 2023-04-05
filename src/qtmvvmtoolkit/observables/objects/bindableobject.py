@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import (QComboBox, QDoubleSpinBox, QLabel, QLineEdit, QPush
 from qtmvvmtoolkit.observables.properties import (ObservableBoolProperty, ObservableFloatProperty,
                                                   ObservableIntProperty, ObservableProperty, ObservableStrProperty,
                                                   RelayableProperty,
-                                                  ComputedIntObservableProperty)
+                                                  ComputedObservableIntProperty)
 
 
 class BindableObject(QObject):
@@ -54,7 +54,7 @@ class BindableObject(QObject):
         return None
 
     # QSPINBOX
-    def bind_spinbox(self, prop: typing.Union[ObservableIntProperty, ComputedIntObservableProperty], widget: QSpinBox):
+    def bind_spinbox(self, prop: typing.Union[ObservableIntProperty, ComputedObservableIntProperty], widget: QSpinBox):
         prop.valueChanged.connect(widget.setValue)
         widget.valueChanged.connect(prop.set)
         prop.valueChanged.emit(prop.get())
