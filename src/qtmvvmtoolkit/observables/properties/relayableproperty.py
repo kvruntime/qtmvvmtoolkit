@@ -10,8 +10,8 @@ class RelayableProperty(QtCore.QObject):
 
     # this signal will be sent ; as response, a function will be called
 
-    def __init__(self, parent: typing.Optional[QtCore.QObject] = None) -> None:
-        super().__init__(parent)
+    def __init__(self) -> None:
+        super().__init__()
         return None
 
     def call(self) -> None:
