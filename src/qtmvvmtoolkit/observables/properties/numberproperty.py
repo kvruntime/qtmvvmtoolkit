@@ -6,6 +6,6 @@ Number = typing.Union[int,float]
 
 class ObservableNumberProperty(ObservableProperty[Number]):
 
-    def __init__(self, prop: typing.Type[Number]):
-        super().__init__(prop, item=Number)
+    def __init__(self, value: typing.Type[Number]):
+        super().__init__(value, item=Number)
         pass

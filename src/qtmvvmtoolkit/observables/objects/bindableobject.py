@@ -1,14 +1,12 @@
 import typing
 
 from PyQt6.QtCore import QObject
-from PyQt6.QtWidgets import (
-    QWidget, QLineEdit, QLabel, QComboBox, QPushButton, QToolButton, QSpinBox, QDoubleSpinBox
-)
+from PyQt6.QtWidgets import (QComboBox, QDoubleSpinBox, QLabel, QLineEdit, QPushButton, QSpinBox, QWidget)
 
-from qtmvvmtoolkit.observables.properties import (ObservableProperty,
-                                                  ObservableIntProperty,
-                                                  ObservableFloatProperty, ObservableStrProperty, ObservableBoolProperty
-                                                  )
+from qtmvvmtoolkit.observables.properties import (ObservableBoolProperty, ObservableFloatProperty,
+                                                  ObservableIntProperty, ObservableProperty, ObservableStrProperty,
+                                                  RelayableProperty,
+                                                  ComputedIntObservableProperty)
 
 
 class BindableObject(QObject):
@@ -56,19 +54,19 @@ class BindableObject(QObject):
         return None
 
     # QSPINBOX
-    def bind_spinbox(self, prop: ObservableIntProperty, widget: QSpinBox):
+    def bind_spinbox(self, prop: typing.Union[ObservableIntProperty, ComputedIntObservableProperty], widget: QSpinBox):
         prop.valueChanged.connect(widget.setValue)
         widget.valueChanged.connect(prop.set)
         prop.valueChanged.emit(prop.get())
         return None
 
     # QDoubleSpinBox
-    # def bind_dspin(self, prop: typing.Union[ObservableFloatProperty, ComputedObservableFloatProperty],
-    #                widget: QDoubleSpinBox):
-    #     prop.valueChanged.connect(widget.setValue)
-    #     widget.valueChanged.connect(prop.set)
-    #     prop.valueChanged.emit(prop.get())
-    #     return None
+    def bind_dspin(self, value: ObservableFloatProperty,
+                   widget: QDoubleSpinBox):
+        value.valueChanged.connect(widget.setValue)
+        widget.valueChanged.connect(value.set)
+        value.valueChanged.emit(value.get())
+        return None
 
     def bind_dspin_percent(self, prop: ObservableFloatProperty, widget: QDoubleSpinBox):
         prop.valueChanged.connect(lambda value: widget.setValue(value * 100))
@@ -87,9 +85,9 @@ class BindableObject(QObject):
         return None
 
     # Relayable Property
-    # def bind_relayable_property(self, prop: RelayableProperty, function: typing.Callable[..., None]) -> None:
-    #     prop.relayed.connect(lambda: function())
-    #     return None
+    def bind_relayable_property(self, value: RelayableProperty, function: typing.Callable[..., None]) -> None:
+        value.relayed.connect(lambda: function())
+        return None
 
     # Actions
     # def bind_action_command(self, action:QtGui.QAction, function:typing.Callable)->None:

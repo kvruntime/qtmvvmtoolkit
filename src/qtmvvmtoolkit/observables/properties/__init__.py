@@ -1,6 +1,6 @@
 from .observableproperty import ObservableProperty
 from .floatproperty import ObservableFloatProperty
-from .intproperty import ObservableIntProperty
+from .intproperty import ObservableIntProperty, ComputedIntObservableProperty
 from .strproperty import ObservableStrProperty
 from .numberproperty import ObservableNumberProperty
 from .boolproperty import ObservableBoolProperty

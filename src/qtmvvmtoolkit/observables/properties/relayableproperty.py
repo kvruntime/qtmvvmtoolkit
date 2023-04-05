@@ -1,6 +1,5 @@
 # this new feature allow viewmodel to be notified when called
 # and call a function in viewmodel (eg: to update application state, for example
-import typing
 
 from PyQt6 import QtCore
 
@@ -12,7 +11,7 @@ class RelayableProperty(QtCore.QObject):
 
     def __init__(self) -> None:
         super().__init__()
-        return None
+        pass
 
     def call(self) -> None:
         self.relayed.emit()
