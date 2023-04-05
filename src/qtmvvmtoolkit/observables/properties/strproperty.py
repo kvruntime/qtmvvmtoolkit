@@ -1,22 +1,9 @@
-from PyQt6.QtCore import QObject
-from PyQt6.QtCore import pyqtSignal
-import typing
+from typing import Type
+from .observableproperty import ObservableProperty
 
 
-class ObservableStrProperty(QObject):
-    valueChanged = pyqtSignal(str, name="valueChanged")
+class ObservableStrProperty(ObservableProperty[str]):
 
-    def __init__(self, prop: str = "") -> None:
-        super().__init__()
-        self.prop: str = prop
-        self.set(prop)
+    def __init__(self, prop: Type[str]) -> object:
+        super().__init__(prop, item=str)
         pass
-
-    def get(self):
-        return self.prop
-
-    def set(self, value: str):
-        if value != self.prop:
-            self.prop = value
-            self.valueChanged.emit(self.prop)
-        return

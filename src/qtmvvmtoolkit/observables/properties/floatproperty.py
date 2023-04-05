@@ -1,22 +1,8 @@
-from PyQt6.QtCore import QObject
-from PyQt6.QtCore import pyqtSignal
-import typing
+from typing import Type
+from .observableproperty import ObservableProperty
 
 
-class ObservableFloatProperty(QObject):
-    valueChanged = pyqtSignal(float, name="valueChanged")
+class ObservableFloatProperty(ObservableProperty[float]):
 
-    def __init__(self, prop: float=0) -> None:
-        super().__init__()
-        self.prop: float = prop
-        self.set(prop)
-        pass
-
-    def get(self):
-        return self.prop
-
-    def set(self, value: float):
-        if value != self.prop:
-            self.prop = value
-            self.valueChanged.emit(self.prop)
-        return
+    def __init__(self, prop: Type[float]):
+        super().__init__(prop, item=float)
