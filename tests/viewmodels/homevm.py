@@ -1,5 +1,8 @@
+import typing
+
 from qtmvvmtoolkit.observables.objects import ObservableObject
-from qtmvvmtoolkit.observables.properties import ObservableStrProperty
+from qtmvvmtoolkit.observables.properties import ComputedIntObservableProperty
+from qtmvvmtoolkit.observables.properties import ObservableIntProperty, ObservableStrProperty
 
 
 class HomeViewModel(ObservableObject):
@@ -7,4 +10,14 @@ class HomeViewModel(ObservableObject):
         super().__init__()
 
         self.username = ObservableStrProperty("named")
-    pass
+        self.voltage = ObservableIntProperty(2)
+        self.capacity = ObservableIntProperty(100)
+        self.energy = ComputedIntObservableProperty(10, [self.voltage, self.capacity], self.compute_energy)
+        pass
+
+    def compute_energy(self) -> typing.Type[int]:
+        _energy = self.voltage.get() * self.capacity.get()
+        print(_energy)
+        # self.energy.set(_energy)
+        return _energy
+
