@@ -1,3 +1,4 @@
 from program import Program
 
-Program()
+if __name__ == "__main__":
+    Program()
