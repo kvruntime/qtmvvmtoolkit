@@ -13,7 +13,7 @@ class NavButton(QPushButton):
         text: str = "",
         router: NavigationManager | None = None,
         path: str = "",
-        icon_path: typing.Optional[Path] = None
+        icon_path: typing.Optional[Path] = None,
     ):
         super().__init__()
         self.setParent(parent)  # type: ignore FIXME: fix element assignation

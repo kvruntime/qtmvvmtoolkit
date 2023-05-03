@@ -7,20 +7,15 @@ from PyQt6 import QtGui, QtWidgets
 
 class BaseApp(QtWidgets.QApplication):
     def __init__(
-            self,
-            argv: typing.List[str],
-            appShell: typing.Type[QtWidgets.QMainWindow] = QtWidgets.QMainWindow
+        self,
+        argv: typing.List[str],
+        appShell: typing.Type[QtWidgets.QMainWindow] = QtWidgets.QMainWindow,
     ) -> None:
         super().__init__(argv)
         self.appShell = appShell()
         pass
 
-    def configureApplication(
-            self,
-            appName: str,
-            appVersion: str,
-            minWdth: int
-    ) -> None:
+    def configureApplication(self, appName: str, appVersion: str, minWdth: int) -> None:
         self.setApplicationName(appName)
         self.setApplicationDisplayName(appName)
         self.setApplicationVersion(appVersion)
@@ -30,7 +25,9 @@ class BaseApp(QtWidgets.QApplication):
 
     def centerWindow(self):
         qt_rectangle = self.appShell.frameGeometry()
-        center_point = QtGui.QGuiApplication.primaryScreen().availableGeometry().center()
+        center_point = (
+            QtGui.QGuiApplication.primaryScreen().availableGeometry().center()
+        )
         qt_rectangle.moveCenter(center_point)
         self.appShell.move(qt_rectangle.topLeft())
         return None

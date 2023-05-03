@@ -2,7 +2,7 @@ import logging
 
 from PyQt6.QtCore import QObject
 
-from qtmvvmtoolkit.observables.properties import ObservableStrProperty
+from .strproperty import ObservableStrProperty
 
 
 class ObservableObject(QObject):
@@ -13,7 +13,7 @@ class ObservableObject(QObject):
         self.title = ObservableStrProperty("ViewModel")
 
         formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
         )
         stream_handler = logging.StreamHandler()
         stream_handler.setFormatter(formatter)

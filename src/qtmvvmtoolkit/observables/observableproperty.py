@@ -34,11 +34,11 @@ class ComputedObservableProperty(Generic[T], QtCore.QObject):
     valueChanged = QtCore.pyqtSignal(*Types, name="valueChanged")
 
     def __init__(
-            self,
-            value: Type[T],
-            observable_props: typing.List[ObservableProperty],
-            update_function: typing.Callable[..., Type[T]],
-            item: Type[T]
+        self,
+        value: Type[T],
+        observable_props: typing.List[ObservableProperty],
+        update_function: typing.Callable[..., Type[T]],
+        item: Type[T],
     ) -> None:
         super().__init__()
         self.value: Type[T] = value
@@ -66,7 +66,7 @@ class ComputedObservableProperty(Generic[T], QtCore.QObject):
 
         # NOTE:New experimental feature
         # This feature is working for now
-        _result =self.update_function()
+        _result = self.update_function()
 
         if _result and isinstance(_result, self.item):
             self.set(_result)

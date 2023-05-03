@@ -19,7 +19,7 @@ class Router(ABC):
     @abstractmethod
     def goTo(self, path: str):
         pass
-    
+
     @abstractmethod
     def goToNext(self):
         pass
