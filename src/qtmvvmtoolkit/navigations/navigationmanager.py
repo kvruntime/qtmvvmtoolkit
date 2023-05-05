@@ -1,5 +1,6 @@
 import typing
-from PyQt6.QtWidgets import QWidget, QStackedWidget
+
+from PyQt6.QtWidgets import QStackedWidget, QWidget
 
 
 class NavigationManager:

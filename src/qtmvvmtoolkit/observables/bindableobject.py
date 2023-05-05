@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 import typing
 
 from PyQt6.QtCore import QObject
@@ -11,12 +12,33 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from .observableproperty import ObservableProperty, ComputedObservableProperty
-from .boolproperty import ObservableBoolProperty, ComputedObservableBoolProperty
-from .floatproperty import ObservableFloatProperty, ComputedObservableFloatProperty
-from .intproperty import ObservableIntProperty, ComputedObservableIntProperty
+from .boolproperty import (
+    ComputedObservableBoolProperty,
+    ObservableBoolProperty,
+)
+from .floatproperty import (
+    ComputedObservableFloatProperty,
+    ObservableFloatProperty,
+)
+from .intproperty import ComputedObservableIntProperty, ObservableIntProperty
+from .observableproperty import ComputedObservableProperty, ObservableProperty
 from .relayableproperty import RelayableProperty
-from .strproperty import ObservableStrProperty, ComputedObservableStrProperty
+from .strproperty import ComputedObservableStrProperty, ObservableStrProperty
+
+Observables = [
+    ObservableProperty,
+    ComputedObservableProperty,
+    ObservableBoolProperty,
+    ComputedObservableBoolProperty,
+    ObservableFloatProperty,
+    ComputedObservableFloatProperty,
+    ObservableIntProperty,
+    ComputedObservableIntProperty,
+    ObservableStrProperty,
+    ComputedObservableStrProperty,
+]
+
+display_properties = typing.Literal["hidden", "disabled"]
 
 
 class BindableObject(QObject):
@@ -24,11 +46,31 @@ class BindableObject(QObject):
         super().__init__(parent)
         pass
 
-    def binding(
-        self, widget: QWidget, prop: str, observable: ObservableProperty
-    ) -> None:
-        # Implement this method
-        return None
+    # @typing.overload
+    # def binding_label(
+    #     self,
+    #     widget: QLabel,
+    #     prop: typing.Literal,
+    #     observable: ObservableBoolProperty | ComputedObservableBoolProperty,
+    # ) -> None:
+    #     ...
+
+    # @typing.overload
+    # def binding_label(
+    #     self,
+    #     widget: QLabel,
+    #     prop: display_properties,
+    #     observable: ObservableBoolProperty | ComputedObservableBoolProperty,
+    # ) -> None:
+    #     ...
+
+    # def binding_label(
+    #     self,
+    #     widget: QLabel,
+    #     prop: typing.Literal | display_properties,
+    #     observable: ObservableProperty | ComputedObservableProperty,
+    # ) -> None:
+    #     return
 
     # Relayable Property
     def bind_relayable_property(
@@ -108,8 +150,3 @@ class BindableObject(QObject):
         prop.valueChanged.connect(lambda value: widget.setEnabled(value))
         prop.valueChanged.emit(prop.get())
         return None
-
-    # Actions
-    # def bind_action_command(self, action:QtGui.QAction, function:typing.Callable)->None:
-    #     action.triggered.connect(lambda: function())
-    #     return None

@@ -1,6 +1,7 @@
-from typing import Type
 import typing
-from .observableproperty import ObservableProperty, ComputedObservableProperty
+from typing import Type
+
+from .observableproperty import ComputedObservableProperty, ObservableProperty
 
 
 class ObservableIntProperty(ObservableProperty[int]):

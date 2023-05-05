@@ -1,10 +1,16 @@
 import typing
 
-
 from qtmvvmtoolkit.observables import (
-     ObservableIntProperty, ObservableStrProperty, ComputedObservableIntProperty,ObservableObject
+    ComputedObservableIntProperty,
+    ObservableBoolProperty,
+    ObservableIntProperty,
+    ObservableObject,
+    ObservableStrProperty,
+    RelayableProperty,
 )
-from qtmvvmtoolkit.observables.relayableproperty import RelayableProperty
+
+# from ...src.qtmvvmtoolkit.observables.boolproperty import \
+#     ObservableBoolProperty
 
 
 class HomeViewModel(ObservableObject):
@@ -14,8 +20,10 @@ class HomeViewModel(ObservableObject):
         self.username = ObservableStrProperty("named")
         self.voltage = ObservableIntProperty(2)
         self.capacity = ObservableIntProperty(100)
-        self.energy = ComputedObservableIntProperty(10, [self.voltage, self.capacity], self.compute_energy)
-
+        self.energy = ComputedObservableIntProperty(
+            10, [self.voltage, self.capacity], self.compute_energy
+        )
+        self.hide = ObservableBoolProperty(False)
         self.changed = RelayableProperty()
         pass
 
@@ -25,4 +33,5 @@ class HomeViewModel(ObservableObject):
 
     def command_call_relay(self):
         self.changed.call()
+        # self.hide.set(not self.hide.get())
         return None

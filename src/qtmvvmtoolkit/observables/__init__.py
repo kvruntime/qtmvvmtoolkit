@@ -1,9 +1,16 @@
 # -*- coding:utf-8 -*-
 from qtmvvmtoolkit.observables.bindableobject import BindableObject
-from .observableproperty import ObservableProperty, ComputedObservableProperty
-from .boolproperty import ObservableBoolProperty, ComputedObservableBoolProperty
-from .floatproperty import ObservableFloatProperty, ComputedObservableFloatProperty
-from .intproperty import ObservableIntProperty, ComputedObservableIntProperty
+
+from .boolproperty import (
+    ComputedObservableBoolProperty,
+    ObservableBoolProperty,
+)
+from .floatproperty import (
+    ComputedObservableFloatProperty,
+    ObservableFloatProperty,
+)
+from .intproperty import ComputedObservableIntProperty, ObservableIntProperty
 from .observableobject import ObservableObject
+from .observableproperty import ComputedObservableProperty, ObservableProperty
 from .relayableproperty import RelayableProperty
-from .strproperty import ObservableStrProperty, ComputedObservableStrProperty
+from .strproperty import ComputedObservableStrProperty, ObservableStrProperty

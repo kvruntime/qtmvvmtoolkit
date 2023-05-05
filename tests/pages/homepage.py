@@ -1,13 +1,13 @@
 import typing
-from PyQt6 import QtCore
+
 from PyQt6.QtWidgets import *
+from viewmodels.homevm import HomeViewModel
 
 from qtmvvmtoolkit.observables import BindableObject
-from viewmodels.homevm import HomeViewModel
 
 
 class HomePage(QWidget, BindableObject):
-    def __init__(self, parent: typing.Optional[QWidget] = None ) -> None:
+    def __init__(self, parent: typing.Optional[QWidget] = None) -> None:
         super().__init__(parent)
 
         self.vm = HomeViewModel()
@@ -16,11 +16,11 @@ class HomePage(QWidget, BindableObject):
         self.initialize_bindings()
 
     def initialize_components(self):
-
         layout = QVBoxLayout(self)
 
-        self.labelName = QLabel("--#--", self)
         self.entryName = QLineEdit(self)
+        self.labelName = QLabel("--#--", self)
+        self.labelVoltage = QLabel("V")
 
         self.spinCapacity = QSpinBox()
         self.spinVoltage = QSpinBox()
@@ -35,8 +35,9 @@ class HomePage(QWidget, BindableObject):
         layout.addWidget(self.labelName)
         layout.addSpacing(10)
         layout.addWidget(QLabel("<h2>Computed Properties Sections</h2>"))
-        layout.addWidget(self.spinCapacity)
         layout.addWidget(self.spinVoltage)
+        layout.addWidget(self.labelVoltage)
+        layout.addWidget(self.spinCapacity)
         layout.addWidget(self.spinEnergy)
 
         layout.addWidget(QLabel("<h2>Relayables Properties Sections</h2>"))
@@ -45,24 +46,32 @@ class HomePage(QWidget, BindableObject):
         return None
 
     def initialize_bindings(self) -> None:
-        self.bind_label(self.vm.username, self.labelName)
-        self.bind_lineedit(self.vm.username, self.entryName)
-        self.bind_spinbox(self.vm.voltage, self.spinVoltage)
+        self.vm.username.binding(self.labelName.setText)
+        self.vm.username.binding(self.entryName.setText)
+        self.vm.hide.valueChanged.connect(self.labelName.setHidden)
+
+        self.vm.username.binding_reverse(self.entryName.textChanged)
+        self.vm.hide.valueChanged.connect(self.entryName.setReadOnly)
+
+        self.vm.voltage.binding(self.spinVoltage.setValue)
+        self.vm.voltage.binding_reverse(self.spinVoltage.valueChanged)
+        self.vm.voltage.binding(
+            lambda value: self.labelVoltage.setText(f"Voltage={value:02d}V")
+        )
+        self.vm.hide.binding(lambda value: self.spinVoltage.setVisible(not value))
         self.bind_spinbox(self.vm.capacity, self.spinCapacity)
-        self.bind_spinbox(self.vm.energy, self.spinEnergy)
+        self.vm.energy.valueChanged.connect(self.spinEnergy.setValue)
+        self.spinEnergy.valueChanged.connect(self.vm.energy.set)
 
         self.bind_button_command(self.buttonCall, self.vm.command_call_relay)
-        self.relaying(self.vm.changed, self.display_information)
+        self.vm.changed.binding(self.display_information)
         return None
 
     def display_information(self):
-        res = QMessageBox.information(QWidget(), "Informations", "Calling...", QMessageBox.StandardButton.Close|QMessageBox.StandardButton.Yes)
-        print(res)
-        if res.Close:
-            self.launch_operation()
+        self.launch_operation()
 
         return None
+
     def launch_operation(self):
-        for index in range(100_000):
-            print("operating...")
+        self.vm.hide.set(not self.vm.hide.get())
         return None

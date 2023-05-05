@@ -1,4 +1,4 @@
-from typing import Callable, Any
+from typing import Any, Callable
 
 # Use this as decoartor of the callable
 

@@ -3,6 +3,7 @@ import typing
 from typing import Generic, Type, TypeVar
 
 from PyQt6 import QtCore
+from PyQt6.QtCore import *
 
 T = TypeVar("T", int, str, float, object, bool)
 Types = [[object], [int], [float], [str], [bool]]
@@ -28,6 +29,17 @@ class ObservableProperty(Generic[T], QtCore.QObject):
             self.value = value
             self.valueChanged.emit(self.value)
         return
+
+    def binding(self, method: typing.Callable[[typing.Any], None]) -> None:
+        """One way binding"""
+        self.valueChanged.connect(method)
+        self.valueChanged.emit(self.get())
+        return None
+
+    def binding_reverse(self, signal: QtCore.pyqtBoundSignal) -> None:
+        """Reverse binding method"""
+        signal.connect(self.set)
+        return None
 
 
 class ComputedObservableProperty(Generic[T], QtCore.QObject):
@@ -63,13 +75,14 @@ class ComputedObservableProperty(Generic[T], QtCore.QObject):
     def update(self) -> None:
         self.update_function()
         self.valueChanged.emit(self.value)
-
-        # NOTE:New experimental feature
-        # This feature is working for now
         _result = self.update_function()
 
         if _result and isinstance(_result, self.item):
             self.set(_result)
         return None
 
-    pass
+    def binding(self, method: typing.Callable[[], None]) -> None:
+        """One way binding"""
+        self.valueChanged.connect(method)
+        self.valueChanged.emit(self.get())
+        return None
