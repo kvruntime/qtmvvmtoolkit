@@ -28,8 +28,7 @@ class HomeViewModel(ObservableObject):
         pass
 
     def compute_energy(self) -> typing.Type[int]:
-        _energy = self.voltage.get() * self.capacity.get()
-        return _energy
+        return self.voltage.get() * self.capacity.get()
 
     def command_call_relay(self):
         self.changed.call()

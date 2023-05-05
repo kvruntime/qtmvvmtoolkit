@@ -2,6 +2,7 @@
 # and call a function in viewmodel (eg: to update application state, for example
 
 import typing
+
 from PyQt6 import QtCore
 from PyQt6.QtCore import pyqtSignal
 

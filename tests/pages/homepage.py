@@ -3,10 +3,10 @@ import typing
 from PyQt6.QtWidgets import *
 from viewmodels.homevm import HomeViewModel
 
-from qtmvvmtoolkit.observables import BindableObject
+from qtmvvmtoolkit.observables import RelayCommand
 
 
-class HomePage(QWidget, BindableObject):
+class HomePage(QWidget):
     def __init__(self, parent: typing.Optional[QWidget] = None) -> None:
         super().__init__(parent)
 
@@ -59,17 +59,20 @@ class HomePage(QWidget, BindableObject):
             lambda value: self.labelVoltage.setText(f"Voltage={value:02d}V")
         )
         self.vm.hide.binding(lambda value: self.spinVoltage.setVisible(not value))
-        self.bind_spinbox(self.vm.capacity, self.spinCapacity)
+        self.vm.capacity.binding(self.spinCapacity.setValue)
+        self.vm.capacity.binding_reverse(self.spinCapacity.valueChanged)
         self.vm.energy.valueChanged.connect(self.spinEnergy.setValue)
         self.spinEnergy.valueChanged.connect(self.vm.energy.set)
 
-        self.bind_button_command(self.buttonCall, self.vm.command_call_relay)
-        self.vm.changed.binding(self.display_information)
+        # self.vm.changed.binding(self.display_information)
+        self.buttonCall.clicked.connect(
+            RelayCommand(self.display_information, name="viktor")
+        )
         return None
 
-    def display_information(self):
+    def display_information(self, name: str):
         self.launch_operation()
-
+        print(name)
         return None
 
     def launch_operation(self):

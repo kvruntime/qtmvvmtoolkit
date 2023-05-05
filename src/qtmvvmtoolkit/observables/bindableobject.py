@@ -1,5 +1,7 @@
 # -*- coding:utf-8 -*-
+from logging import warning
 import typing
+import warnings
 
 from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import (
@@ -44,6 +46,7 @@ display_properties = typing.Literal["hidden", "disabled"]
 class BindableObject(QObject):
     def __init__(self, parent: typing.Optional[QWidget] = None):
         super().__init__(parent)
+        warnings.warn("deprecated: this will be removed in future")
         pass
 
     # @typing.overload

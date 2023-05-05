@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-from qtmvvmtoolkit.observables.bindableobject import BindableObject
 
 from .boolproperty import (
     ComputedObservableBoolProperty,
@@ -13,4 +12,5 @@ from .intproperty import ComputedObservableIntProperty, ObservableIntProperty
 from .observableobject import ObservableObject
 from .observableproperty import ComputedObservableProperty, ObservableProperty
 from .relayableproperty import RelayableProperty
+from .relaycommand import RelayCommand
 from .strproperty import ComputedObservableStrProperty, ObservableStrProperty
