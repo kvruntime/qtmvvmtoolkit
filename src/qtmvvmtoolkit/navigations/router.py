@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
+from typing import Dict
+
 from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import QWidget
-from typing import Dict
 
 
 class Router(ABC):

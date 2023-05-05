@@ -1,8 +1,10 @@
 import typing
-from PyQt6.QtWidgets import QPushButton, QWidget
-from qtmvvmtoolkit.navigations.navigationmanager import NavigationManager
 from pathlib import Path
+
 from PyQt6.QtGui import QIcon
+from PyQt6.QtWidgets import QPushButton, QWidget
+
+from qtmvvmtoolkit.navigations.navigationmanager import NavigationManager
 
 
 class NavButton(QPushButton):
