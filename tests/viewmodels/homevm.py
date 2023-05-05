@@ -10,7 +10,6 @@ from qtmvvmtoolkit.inputs import (
 )
 
 
-
 class HomeViewModel(ObservableObject):
     def __init__(self):
         super().__init__()

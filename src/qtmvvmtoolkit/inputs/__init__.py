@@ -1,16 +1,19 @@
 # -*- coding:utf-8 -*-
 
-from .boolproperty import (
+from .computedproperty import (
     ComputedObservableBoolProperty,
-    ObservableBoolProperty,
-)
-from .floatproperty import (
     ComputedObservableFloatProperty,
-    ObservableFloatProperty,
+    ComputedObservableIntProperty,
+    ComputedObservableProperty,
+    ComputedObservableStrProperty,
 )
-from .intproperty import ComputedObservableIntProperty, ObservableIntProperty
 from .observableobject import ObservableObject
-from .observableproperty import ComputedObservableProperty, ObservableProperty
+from .observableproperty import (
+    ObservableBoolProperty,
+    ObservableFloatProperty,
+    ObservableIntProperty,
+    ObservableProperty,
+    ObservableStrProperty,
+)
 from .relayableproperty import RelayableProperty
 from .relaycommand import RelayCommand
-from .strproperty import ComputedObservableStrProperty, ObservableStrProperty

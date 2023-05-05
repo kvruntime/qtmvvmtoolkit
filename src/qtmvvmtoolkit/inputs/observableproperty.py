@@ -42,47 +42,25 @@ class ObservableProperty(Generic[T], QtCore.QObject):
         return None
 
 
-class ComputedObservableProperty(Generic[T], QtCore.QObject):
-    valueChanged = QtCore.pyqtSignal(*Types, name="valueChanged")
-
-    def __init__(
-        self,
-        value: Type[T],
-        observable_props: typing.List[ObservableProperty],
-        update_function: typing.Callable[..., Type[T]],
-        item: Type[T],
-    ) -> None:
-        super().__init__()
-        self.value: Type[T] = value
-        self.item: Type[T] = item
-        assert isinstance(self.value, self.item)
-        self.update_function: typing.Callable[..., Type[T]] = update_function
-        self.properties = observable_props
-
-        for observable_prop in self.properties:
-            observable_prop.valueChanged.connect(self.update)
+class ObservableBoolProperty(ObservableProperty[bool]):
+    def __init__(self, value: Type[bool]):
+        super().__init__(value, item=bool)
         pass
 
-    def get(self) -> Type[T]:
-        return self.value
 
-    def set(self, value: Type[T]):
-        assert isinstance(value, self.item)
-        self.value = value
-        self.valueChanged.emit(self.value)
-        return None
+class ObservableFloatProperty(ObservableProperty[float]):
+    def __init__(self, value: Type[float]):
+        super().__init__(value, item=float)
+        return
 
-    def update(self) -> None:
-        self.update_function()
-        self.valueChanged.emit(self.value)
-        _result = self.update_function()
 
-        if _result and isinstance(_result, self.item):
-            self.set(_result)
-        return None
+class ObservableIntProperty(ObservableProperty[int]):
+    def __init__(self, value: Type[int]):
+        super().__init__(value, item=int)
+        return
 
-    def binding(self, method: typing.Callable[[], None]) -> None:
-        """One way binding"""
-        self.valueChanged.connect(method)
-        self.valueChanged.emit(self.get())
-        return None
+
+class ObservableStrProperty(ObservableProperty[str]):
+    def __init__(self, value: Type[str]) -> object:
+        super().__init__(value, item=str)
+        return

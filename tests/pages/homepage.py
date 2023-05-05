@@ -3,7 +3,7 @@ import typing
 from PyQt6.QtWidgets import *
 from viewmodels.homevm import HomeViewModel
 
-from qtmvvmtoolkit.observables import RelayCommand
+from qtmvvmtoolkit.inputs import RelayCommand
 
 
 class HomePage(QWidget):
