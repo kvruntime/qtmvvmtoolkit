@@ -1,13 +1,13 @@
 import typing
+from qtmvvmtoolkit.inputs.computedproperty import ComputedObservableIntProperty
+from qtmvvmtoolkit.inputs.observableobject import ObservableObject
 
-from qtmvvmtoolkit.inputs import (
-    ComputedObservableIntProperty,
+from qtmvvmtoolkit.inputs.observableproperty import (
     ObservableBoolProperty,
     ObservableIntProperty,
-    ObservableObject,
     ObservableStrProperty,
-    RelayableProperty,
 )
+from qtmvvmtoolkit.inputs.relayableproperty import RelayableProperty
 
 
 class HomeViewModel(ObservableObject):

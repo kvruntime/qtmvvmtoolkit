@@ -7,15 +7,14 @@ class NavigationManager:
     def __init__(
         self,
         outlet: typing.Optional[QStackedWidget] = None,
-        routes: typing.Optional[typing.Dict] = None,
+        routes: typing.Optional[typing.Dict[typing.Any, typing.Any]] = None,
     ) -> None:
         self._outlet = outlet or QStackedWidget()
-        self._routes: typing.Dict = routes or {}
+        self._routes = routes or {}
         pass
 
     def goto(self, path: str):
-        element = self._routes.get(path)
-        if element:
+        if element := self._routes.get(path):
             self._outlet.setCurrentWidget(element)
         return None
 
