@@ -1,6 +1,7 @@
+# -*- coding:utf-8 -*-
 import typing
 
-from PyQt6.QtWidgets import QStackedWidget, QWidget
+from PyQt6.QtWidgets import *
 
 
 class NavigationManager:
@@ -11,7 +12,7 @@ class NavigationManager:
     ) -> None:
         self._outlet = outlet or QStackedWidget()
         self._routes = routes or {}
-        pass
+        return
 
     def goto(self, path: str):
         if element := self._routes.get(path):
