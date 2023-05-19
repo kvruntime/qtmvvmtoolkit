@@ -1,10 +1,11 @@
+# -*- coding:utf-8 -*-
 import typing
 from pathlib import Path
 
-from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QPushButton, QWidget
+from PyQt6.QtGui import *
+from PyQt6.QtWidgets import *
 
-from qtmvvmtoolkit.navigations.navigationmanager import NavigationManager
+from qtmvvmtoolkit.navigation import NavigationManager
 
 
 class NavButton(QPushButton):
@@ -22,10 +23,11 @@ class NavButton(QPushButton):
         self.setText(text)
         self._navigation_manager = router
         self._path = path
-        # type: ignore FIXME: fix element assignation
-        self.setIcon(QIcon(icon_path.as_posix())) if icon_path else None
 
-        self._binds()
+        if icon_path:
+            self.setIcon(QIcon(icon_path.as_posix()))
+
+        self.clicked.connect(self._goto)
         pass
 
     def _goto(self):
@@ -39,8 +41,4 @@ class NavButton(QPushButton):
 
     def set_path(self, path: str):
         self._path = path
-        return None
-
-    def _binds(self):
-        self.clicked.connect(self._goto)
         return None

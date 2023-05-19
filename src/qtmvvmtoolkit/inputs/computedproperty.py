@@ -4,37 +4,36 @@ from typing import Generic, Type, TypeVar
 from PyQt6 import QtCore
 from PyQt6.QtCore import *
 
-from .observableproperty import ObservableProperty
+from qtmvvmtoolkit.inputs.observableproperty import ObservableProperty
 
 T = TypeVar("T", int, str, float, object, bool)
 Types = [[object], [int], [float], [str], [bool]]
 
 
-class ComputedObservableProperty(Generic[T], QtCore.QObject):
+class ComputedObservableProperty(QtCore.QObject, Generic[T]):
     valueChanged = QtCore.pyqtSignal(*Types, name="valueChanged")
 
     def __init__(
         self,
-        value: Type[T],
+        value: T,
         observable_props: typing.List[ObservableProperty[typing.Any]],
-        update_function: typing.Callable[..., Type[T]],
-        item: Type[T],
+        update_function: typing.Callable[..., T],
+        item: T,
     ) -> None:
         super().__init__()
-        self.value: Type[T] = value
-        self.item: Type[T] = item
-        assert isinstance(self.value, self.item)
-        self.update_function: typing.Callable[..., Type[T]] = update_function
-        self.properties = observable_props
+        self.value: T = value
+        self.item: T = item
+        self.update_function = update_function
+        self.observable_props = observable_props
 
-        for observable_prop in self.properties:
+        for observable_prop in self.observable_props:
             observable_prop.valueChanged.connect(self.update)
         return
 
-    def get(self) -> Type[T]:
+    def get(self) -> T:
         return self.value
 
-    def set(self, value: Type[T]):
+    def set(self, value: T):
         assert isinstance(value, self.item)
         self.value = value
         self.valueChanged.emit(self.value)

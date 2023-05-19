@@ -6,7 +6,7 @@ import context
 context.__file__
 from PyQt6.QtWidgets import QMainWindow
 
-from qtmvvmtoolkit.widgets import BaseApp
+from qtmvvmtoolkit.widgets.baseapp import BaseApp
 
 
 class App(BaseApp):
