@@ -4,6 +4,7 @@ from typing import Generic, Type, TypeVar
 
 from PyQt6.QtCore import *
 
+
 T = TypeVar("T", int, str, float, object, bool)
 Types = [[object], [int], [float], [str], [bool]]
 
@@ -34,14 +35,14 @@ class ObservableProperty(QObject, Generic[T]):
         self.valueChanged.emit(self.get())
         return None
 
-    def binding_reverse(self, signal: pyqtBoundSignal) -> None:
-        """Reverse binding method"""
-        signal.connect(self.set)
-        return None
+
+
+
 
     def binding_reverse(self, signal: pyqtBoundSignal) -> None:
         """Reverse binding method"""
         signal.connect(self.set)
+        self.valueChanged.emit(self.get())
         return None
 
 

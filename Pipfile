@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 pyqt6 = "6.4.2"
 pyqtdarktheme = "2.1.0"
+qtpy = "*"
 
 [dev-packages]
 mypy = "1.1.1"
