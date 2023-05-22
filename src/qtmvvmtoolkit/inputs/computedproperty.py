@@ -55,6 +55,7 @@ class ComputedObservableProperty(QtCore.QObject, Generic[T]):
         return None
 
 
+# FIXME: resolve type hint for remain computed properties
 class ComputedObservableBoolProperty(ComputedObservableProperty[bool]):
     def __init__(
         self,
@@ -91,9 +92,9 @@ class ComputedObservableIntProperty(ComputedObservableProperty[int]):
 class ComputedObservableStrProperty(ComputedObservableProperty[str]):
     def __init__(
         self,
-        value: Type[str],
+        value: str,
         observable_props: typing.List[ObservableProperty],
         update_function: typing.Callable[..., Type[str]],
     ) -> None:
-        super().__init__(value, observable_props, update_function, item=float)
+        super().__init__(value, observable_props, update_function, item=str)
         return

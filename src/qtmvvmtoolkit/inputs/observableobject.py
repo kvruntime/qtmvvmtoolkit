@@ -17,3 +17,7 @@ class ObservableObject(QObject):
         self._logger.setLevel(logging.NOTSET)
         self._logger.addHandler(stream_handler)
         return
+
+
+    def update_viewmodel(self) -> None:
+        return None
