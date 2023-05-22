@@ -1,5 +1,5 @@
 import typing
-from typing import Generic, Type, TypeVar
+from typing import Generic, TypeVar
 
 from PyQt6 import QtCore
 from PyQt6.QtCore import *
@@ -59,9 +59,9 @@ class ComputedObservableProperty(QtCore.QObject, Generic[T]):
 class ComputedObservableBoolProperty(ComputedObservableProperty[bool]):
     def __init__(
         self,
-        value: Type[bool],
+        value: bool,
         observable_props: typing.List[ObservableProperty[typing.Any]],
-        update_function: typing.Callable[..., Type[bool]],
+        update_function: typing.Callable[..., bool],
     ) -> None:
         super().__init__(value, observable_props, update_function, item=bool)
         return
@@ -70,9 +70,9 @@ class ComputedObservableBoolProperty(ComputedObservableProperty[bool]):
 class ComputedObservableFloatProperty(ComputedObservableProperty[float]):
     def __init__(
         self,
-        value: Type[float],
-        observable_props: typing.List[ObservableProperty],
-        update_function: typing.Callable[..., Type[float]],
+        value: float,
+        observable_props: typing.List[ObservableProperty[typing.Any]],
+        update_function: typing.Callable[..., float],
     ) -> None:
         super().__init__(value, observable_props, update_function, item=float)
         return
@@ -81,9 +81,9 @@ class ComputedObservableFloatProperty(ComputedObservableProperty[float]):
 class ComputedObservableIntProperty(ComputedObservableProperty[int]):
     def __init__(
         self,
-        value: Type[int],
+        value: int,
         observable_props: typing.Sequence[ObservableProperty[typing.Any]],
-        update_function: typing.Callable[..., Type[int]],
+        update_function: typing.Callable[..., int],
     ) -> None:
         super().__init__(value, observable_props, update_function, item=int)
         pass
@@ -94,7 +94,7 @@ class ComputedObservableStrProperty(ComputedObservableProperty[str]):
         self,
         value: str,
         observable_props: typing.List[ObservableProperty],
-        update_function: typing.Callable[..., Type[str]],
+        update_function: typing.Callable[..., str],
     ) -> None:
         super().__init__(value, observable_props, update_function, item=str)
         return
