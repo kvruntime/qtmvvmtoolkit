@@ -28,6 +28,8 @@ class HomePage(QWidget):
         self.spinEnergy.setReadOnly(True)
         self.spinEnergy.setMaximum(99990)
 
+        self.cboxNames = QComboBox(self)
+
         self.buttonCall = QPushButton("Caller")
 
         layout.addWidget(QLabel("<h2>Observables Str Properties</h2>"))
@@ -42,6 +44,8 @@ class HomePage(QWidget):
 
         layout.addWidget(QLabel("<h2>Relayables Properties Sections</h2>"))
         layout.addWidget(self.buttonCall)
+        layout.addWidget(QLabel("<h2>Observables Collections</h2>"))
+        layout.addWidget(self.cboxNames)
 
         return None
 
@@ -68,11 +72,21 @@ class HomePage(QWidget):
         self.buttonCall.clicked.connect(
             RelayCommand(self.display_information, name="viktor")
         )
+
+        self.vm.infos.binding(self.operation)
+        return None
+
+    def operation(self, value: list[str]):
+        self.cboxNames.clear()
+        self.cboxNames.setDuplicatesEnabled(False)
+        self.cboxNames.addItems(value)
         return None
 
     def display_information(self, name: str):
         self.launch_operation()
         print(name)
+        self.vm.infos.append("pass")
+        self.vm.infos.append("word")
         return None
 
     def launch_operation(self):

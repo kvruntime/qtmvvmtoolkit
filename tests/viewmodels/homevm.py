@@ -8,6 +8,7 @@ from qtmvvmtoolkit.inputs.observableproperty import (
     ObservableStrProperty,
 )
 from qtmvvmtoolkit.inputs.relayableproperty import RelayableProperty
+from qtmvvmtoolkit.inputs.observable_collection import ObservableCollection
 
 
 class HomeViewModel(ObservableObject):
@@ -21,6 +22,9 @@ class HomeViewModel(ObservableObject):
             10, [self.voltage, self.capacity], self.compute_energy
         )
         self.hide = ObservableBoolProperty(False)
+        self.infos = ObservableCollection[str](["user"])
+        self.infos.valueChanged.connect(lambda value: print(value))
+
         self.changed = RelayableProperty()
         pass
 
