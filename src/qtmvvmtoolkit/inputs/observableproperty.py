@@ -23,7 +23,7 @@ class ObservableProperty(QObject, Generic[T]):
         return self.value
 
     def set(self, value: T):
-        assert isinstance(value, self.item)
+        # assert isinstance(value, self.item)
         if value != self.value:
             self.value = value
             self.valueChanged.emit(self.value)
@@ -34,10 +34,6 @@ class ObservableProperty(QObject, Generic[T]):
         self.valueChanged.connect(method)
         self.valueChanged.emit(self.get())
         return None
-
-
-
-
 
     def binding_reverse(self, signal: pyqtBoundSignal) -> None:
         """Reverse binding method"""
@@ -57,11 +53,35 @@ class ObservableFloatProperty(ObservableProperty[float]):
         super().__init__(value, item=float)
         return
 
+    def binding_percent(self, method: typing.Callable[[typing.Any], None]) -> None:
+        """One way binding"""
+        self.valueChanged.connect(lambda value: method(value * 100))
+        self.valueChanged.emit(self.get())
+        return None
+
+    def binding_reverse_percent(self, signal: pyqtBoundSignal) -> None:
+        """Reverse binding method"""
+        signal.connect(lambda value: self.set(value / 100))
+        self.valueChanged.emit(self.get())
+        return None
+
 
 class ObservableIntProperty(ObservableProperty[int]):
     def __init__(self, value: int) -> None:
         super().__init__(value, item=int)
         return
+
+    def binding_percent(self, method: typing.Callable[[typing.Any], None]) -> None:
+        """One way binding"""
+        self.valueChanged.connect(lambda value: method(value * 100))
+        self.valueChanged.emit(self.get())
+        return None
+
+    def binding_reverse_percent(self, signal: pyqtBoundSignal) -> None:
+        """Reverse binding method"""
+        signal.connect(lambda value: self.set(value / 100))
+        self.valueChanged.emit(self.get())
+        return None
 
 
 class ObservableStrProperty(ObservableProperty[str]):

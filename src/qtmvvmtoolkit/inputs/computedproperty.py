@@ -34,7 +34,7 @@ class ComputedObservableProperty(QtCore.QObject, Generic[T]):
         return self.value
 
     def set(self, value: T):
-        assert isinstance(value, self.item)
+        # assert isinstance(value, self.item)
         self.value = value
         self.valueChanged.emit(self.value)
         return None

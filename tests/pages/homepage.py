@@ -22,7 +22,7 @@ class HomePage(QWidget):
         self.labelName = QLabel("--#--", self)
         self.labelVoltage = QLabel("V")
 
-        self.spinCapacity = QSpinBox()
+        self.spinCapacity = QDoubleSpinBox()
         self.spinVoltage = QSpinBox()
         self.spinEnergy = QSpinBox()
         self.spinEnergy.setReadOnly(True)
@@ -63,9 +63,10 @@ class HomePage(QWidget):
             lambda value: self.labelVoltage.setText(f"Voltage={value:02d}V")
         )
         self.vm.hide.binding(lambda value: self.spinVoltage.setVisible(not value))
-        self.vm.capacity.binding(self.spinCapacity.setValue)
-        self.vm.capacity.binding_reverse(self.spinCapacity.valueChanged)
+        self.vm.capacity.binding_percent(self.spinCapacity.setValue)
+        self.vm.capacity.binding_reverse_percent(self.spinCapacity.valueChanged)
         self.vm.energy.valueChanged.connect(self.spinEnergy.setValue)
+
         self.spinEnergy.valueChanged.connect(self.vm.energy.set)
 
         # self.vm.changed.binding(self.display_information)
