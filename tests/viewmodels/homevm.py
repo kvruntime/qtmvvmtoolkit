@@ -1,7 +1,7 @@
 import typing
 
 from qtmvvmtoolkit.inputs.computedproperty import ComputedObservableIntProperty
-from qtmvvmtoolkit.inputs.observableobject import ObservableObject
+from qtmvvmtoolkit.objects.observable_object import ObservableObject
 from qtmvvmtoolkit.inputs.observableproperty import (
     ObservableBoolProperty,
     ObservableIntProperty,
