@@ -1,21 +1,23 @@
+from os import name
 import typing
 
 from PyQt6.QtWidgets import *
+from qtmvvmtoolkit.objects.bindable_object import BindableObject
 from viewmodels.homevm import HomeViewModel
 
 from qtmvvmtoolkit.commands import RelayCommand
 
 
-class HomePage(QWidget):
-    def __init__(self, parent: typing.Optional[QWidget] = None) -> None:
-        super().__init__(parent)
-
+class HomePage(QWidget, BindableObject):
+    def __init__(self) -> None:
+        super().__init__()
         self.vm = HomeViewModel()
 
-        self.initialize_components()
-        self.initialize_bindings()
+        self.initialize_component()
+        self.initialize_binding()
+        return
 
-    def initialize_components(self):
+    def initialize_component(self):
         layout = QVBoxLayout(self)
 
         self.entryName = QLineEdit(self)
@@ -49,29 +51,31 @@ class HomePage(QWidget):
 
         return None
 
-    def initialize_bindings(self) -> None:
+    def initialize_binding(self) -> None:
+
         self.vm.username.binding(self.labelName.setText)
         self.vm.username.binding(self.entryName.setText)
-        self.vm.hide.valueChanged.connect(self.labelName.setHidden)
+        self.binding_widget(self.labelName, self.vm.hide, "visibility")
 
         self.vm.username.binding_reverse(self.entryName.textChanged)
         self.vm.hide.valueChanged.connect(self.entryName.setReadOnly)
 
         self.vm.voltage.binding(self.spinVoltage.setValue)
         self.vm.voltage.binding_reverse(self.spinVoltage.valueChanged)
-        self.vm.voltage.binding(
-            lambda value: self.labelVoltage.setText(f"Voltage={value:02d}V")
-        )
-        self.vm.hide.binding(lambda value: self.spinVoltage.setVisible(not value))
+        # self.vm.voltage.binding(
+        #     lambda value: self.labelVoltage.setText(f"Voltage={value:02d}V")
+        # )
+        self.binding_label_number(self.labelVoltage, self.vm.voltage, lambda value:f'{value:5.2f} v')
+        self.binding_widget(self.spinVoltage, self.vm.hide, "visibility")
         self.vm.capacity.binding_percent(self.spinCapacity.setValue)
         self.vm.capacity.binding_reverse_percent(self.spinCapacity.valueChanged)
         self.vm.energy.valueChanged.connect(self.spinEnergy.setValue)
 
         self.spinEnergy.valueChanged.connect(self.vm.energy.set)
 
-        # self.vm.changed.binding(self.display_information)
-        self.buttonCall.clicked.connect(
-            RelayCommand(self.display_information, name="viktor")
+        self.binding_command(
+            self.buttonCall,
+            RelayCommand(self.display_information, name="viktor"),
         )
 
         self.vm.infos.binding(self.operation)
@@ -85,8 +89,7 @@ class HomePage(QWidget):
 
     def display_information(self, name: str):
         self.launch_operation()
-        print(name)
-        self.vm.infos.append("pass")
+        self.vm.infos.append(name)
         self.vm.infos.append("word")
         return None
 
