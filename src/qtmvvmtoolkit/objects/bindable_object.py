@@ -1,15 +1,16 @@
 # -*- coding:utf-8 -*-
 import typing
-from PyQt6.QtCore import QObject
+from qtpy.QtCore import QObject
 from PyQt6.QtGui import QAction
 
-from PyQt6.QtWidgets import (
+
+from qtpy.QtWidgets import (
     QWidget,
     QPushButton,
     QToolButton,
     QLineEdit,
     QTextEdit,
-    QLabel,
+    QLabel, QSpinBox, QDoubleSpinBox
 )
 
 # from qtpy.QtWidgets import *
@@ -30,8 +31,8 @@ from qtmvvmtoolkit.inputs.observableproperty import (
 
 
 class BindableObject(QObject):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, parent: typing.Optional[QWidget] = None, ) -> None:
+        super().__init__(parent)
         return
 
     def initialize_component(self) -> None:
@@ -50,9 +51,9 @@ class BindableObject(QObject):
         prop: typing.Literal["visibility", "state"],
     ):
         if prop == "visibility":
-            observable.valueChanged.connect(widget.setHidden)
+            observable.valueChanged.connect(widget.setVisible)
         if prop == "state":
-            observable.valueChanged.connect(widget.setDisabled)
+            observable.valueChanged.connect(widget.setEnabled)
         observable.valueChanged.emit(observable.get())
         return None
 
@@ -80,7 +81,8 @@ class BindableObject(QObject):
             ComputedObservableIntProperty,
             ComputedObservableFloatProperty,
         ],
-        transformer: typing.Optional[typing.Callable[[typing.Union[int, float]], str]] = None,
+        transformer: typing.Optional[typing.Callable[[
+            typing.Union[int, float]], str]] = None,
     ) -> None:
         if not transformer:
             observable.valueChanged.connect(
@@ -113,4 +115,43 @@ class BindableObject(QObject):
             widget.triggered.connect(command)
         if isinstance(widget, QPushButton):
             widget.clicked.connect(command)
+        return None
+
+    # SpinBox
+    def binding_spinbox(
+        self,
+        widget: QSpinBox,
+        observable: typing.Union[ObservableIntProperty, ComputedObservableIntProperty],
+        transformer: typing.Optional[typing.Literal["percent"]] = None
+    ) -> None:
+        if transformer == "percent":
+            observable.valueChanged.connect(
+                lambda value: widget.setValue(int(value*100)))
+            widget.valueChanged.connect(
+                lambda value: observable.set(int(value/100)))
+            observable.valueChanged.emit(observable.get())
+            return None
+
+        observable.valueChanged.connect(widget.setValue)
+        widget.valueChanged.connect(observable.set)
+        observable.valueChanged.emit(observable.get())
+        return None
+
+    def binding_doublespinbox(
+        self,
+        widget: QDoubleSpinBox,
+        observable: typing.Union[ObservableFloatProperty, ComputedObservableFloatProperty,],
+        transformer: typing.Optional[typing.Literal["percent"]] = None
+    ) -> None:
+        if transformer == "percent":
+            observable.valueChanged.connect(
+                lambda value: widget.setValue(value*100))
+            widget.valueChanged.connect(
+                lambda value: observable.set(value/100))
+            observable.valueChanged.emit(observable.get())
+            return None
+
+        observable.valueChanged.connect(widget.setValue)
+        widget.valueChanged.connect(observable.set)
+        observable.valueChanged.emit(observable.get())
         return None

@@ -1,16 +1,18 @@
 # -*- coding:utf-8 -*-
 import typing
-from typing import Generic, Type, TypeVar
-
-from PyQt6.QtCore import *
+from typing import Generic, TypeVar
+import pandas as pd
+# from PyQt6.QtCore import *
+from qtpy.QtCore import QObject, Signal
+from PyQt6.QtCore import pyqtBoundSignal
 
 
 T = TypeVar("T", int, str, float, object, bool)
-Types = [[object], [int], [float], [str], [bool]]
+Types = [[object], [int], [float], [str], [bool], [pd.DataFrame]]
 
 
 class ObservableProperty(QObject, Generic[T]):
-    valueChanged = pyqtSignal(*Types, name="valueChanged")
+    valueChanged = Signal(*Types, name="valueChanged")
 
     def __init__(self, value: T, item: T):
         super().__init__()
@@ -43,7 +45,7 @@ class ObservableProperty(QObject, Generic[T]):
 
 
 class ObservableBoolProperty(ObservableProperty[bool]):
-    def __init__(self, value: Type[bool]) -> None:
+    def __init__(self, value: bool) -> None:
         super().__init__(value, item=bool)
         pass
 
@@ -87,4 +89,10 @@ class ObservableIntProperty(ObservableProperty[int]):
 class ObservableStrProperty(ObservableProperty[str]):
     def __init__(self, value: str) -> None:
         super().__init__(value, item=str)
+        return
+
+
+class ObservableDataFrameProperty(ObservableProperty[pd.DataFrame]):
+    def __init__(self, value: pd.DataFrame) -> None:
+        super().__init__(value, item=pd.DataFrame)
         return

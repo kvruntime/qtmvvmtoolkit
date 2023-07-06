@@ -67,8 +67,10 @@ class HomePage(QWidget, BindableObject):
         # )
         self.binding_label_number(self.labelVoltage, self.vm.voltage, lambda value:f'{value:5.2f} v')
         self.binding_widget(self.spinVoltage, self.vm.hide, "visibility")
-        self.vm.capacity.binding_percent(self.spinCapacity.setValue)
-        self.vm.capacity.binding_reverse_percent(self.spinCapacity.valueChanged)
+        # self.vm.capacity.binding_percent(self.spinCapacity.setValue)
+        # self.vm.capacity.binding_reverse_percent(self.spinCapacity.valueChanged)
+        self.binding_doublespinbox(self.spinCapacity, self.vm.capacity, "percent")
+
         self.vm.energy.valueChanged.connect(self.spinEnergy.setValue)
 
         self.spinEnergy.valueChanged.connect(self.vm.energy.set)

@@ -6,6 +6,7 @@ from qtmvvmtoolkit.inputs.observableproperty import (
     ObservableBoolProperty,
     ObservableIntProperty,
     ObservableStrProperty,
+    ObservableFloatProperty
 )
 from qtmvvmtoolkit.inputs.relayableproperty import RelayableProperty
 from qtmvvmtoolkit.inputs.observable_collection import ObservableCollection
@@ -17,7 +18,7 @@ class HomeViewModel(ObservableObject):
 
         self.username = ObservableStrProperty("named")
         self.voltage = ObservableIntProperty(2)
-        self.capacity = ObservableIntProperty(100)
+        self.capacity = ObservableFloatProperty(100)
         self.energy = ComputedObservableIntProperty(
             10, [self.voltage, self.capacity], self.compute_energy
         )
