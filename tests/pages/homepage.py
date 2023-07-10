@@ -29,10 +29,12 @@ class HomePage(QWidget, BindableObject):
         self.spinEnergy = QSpinBox()
         self.spinEnergy.setReadOnly(True)
         self.spinEnergy.setMaximum(99990)
+        self.checkNumbers = QCheckBox(self)
 
         self.cboxNames = QComboBox(self)
 
         self.buttonCall = QPushButton("Caller")
+        # self.buttonCall.setProperty()
 
         layout.addWidget(QLabel("<h2>Observables Str Properties</h2>"))
         layout.addWidget(self.entryName)
@@ -48,6 +50,7 @@ class HomePage(QWidget, BindableObject):
         layout.addWidget(self.buttonCall)
         layout.addWidget(QLabel("<h2>Observables Collections</h2>"))
         layout.addWidget(self.cboxNames)
+        layout.addWidget(self.checkNumbers)
 
         return None
 
@@ -59,17 +62,15 @@ class HomePage(QWidget, BindableObject):
 
         self.vm.username.binding_reverse(self.entryName.textChanged)
         self.vm.hide.valueChanged.connect(self.entryName.setReadOnly)
+        self.vm.valid_numbers.binding(self.checkNumbers.setChecked)
 
         self.vm.voltage.binding(self.spinVoltage.setValue)
         self.vm.voltage.binding_reverse(self.spinVoltage.valueChanged)
-        # self.vm.voltage.binding(
-        #     lambda value: self.labelVoltage.setText(f"Voltage={value:02d}V")
-        # )
-        self.binding_label_number(self.labelVoltage, self.vm.voltage, lambda value:f'{value:5.2f} v')
+        self.binding_label_number(
+            self.labelVoltage, self.vm.voltage, lambda value: f'{value:5.2f} v')
         self.binding_widget(self.spinVoltage, self.vm.hide, "visibility")
-        # self.vm.capacity.binding_percent(self.spinCapacity.setValue)
-        # self.vm.capacity.binding_reverse_percent(self.spinCapacity.valueChanged)
-        self.binding_doublespinbox(self.spinCapacity, self.vm.capacity, "percent")
+        self.binding_doublespinbox(
+            self.spinCapacity, self.vm.capacity, "percent")
 
         self.vm.energy.valueChanged.connect(self.spinEnergy.setValue)
 
@@ -77,8 +78,12 @@ class HomePage(QWidget, BindableObject):
 
         self.binding_command(
             self.buttonCall,
-            RelayCommand(self.display_information, name="viktor"),
+            RelayCommand(self.vm.fill_numbers),
         )
+        # self.binding_command(
+        #     self.buttonCall,
+        #     RelayCommand(self.display_information, name="viktor"),
+        # )
 
         self.vm.infos.binding(self.operation)
         return None

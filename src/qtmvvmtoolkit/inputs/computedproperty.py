@@ -17,7 +17,7 @@ class ComputedObservableProperty(QtCore.QObject, Generic[T]):
         self,
         value: T,
         observable_props: typing.List[ObservableProperty[typing.Any]],
-        update_function: typing.Callable[..., T],
+        update_function: typing.Callable[[], T],
         item: T,
     ) -> None:
         super().__init__()
@@ -40,12 +40,8 @@ class ComputedObservableProperty(QtCore.QObject, Generic[T]):
         return None
 
     def update(self) -> None:
-        self.update_function()
-        self.valueChanged.emit(self.value)
         _result = self.update_function()
-
-        if _result and isinstance(_result, self.item):
-            self.set(_result)
+        self.set(_result)
         return None
 
     def binding(self, method: typing.Callable[[], None]) -> None:
@@ -61,7 +57,7 @@ class ComputedObservableBoolProperty(ComputedObservableProperty[bool]):
         self,
         value: bool,
         observable_props: typing.List[ObservableProperty[typing.Any]],
-        update_function: typing.Callable[..., bool],
+        update_function: typing.Callable[[], bool],
     ) -> None:
         super().__init__(value, observable_props, update_function, item=bool)
         return

@@ -1,6 +1,5 @@
-# -*- coding:utf-8 -*-
+# coding:utf-8
 import typing
-from xml.dom import WrongDocumentErr
 # from PyQt6.QtCore import QObject
 from qtpy.QtCore import QObject, Signal
 from qtpy.QtWidgets import QComboBox
