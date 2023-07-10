@@ -96,3 +96,10 @@ class ObservableDataFrameProperty(ObservableProperty[pd.DataFrame]):
     def __init__(self, value: pd.DataFrame) -> None:
         super().__init__(value, item=pd.DataFrame)
         return
+    # TODO: reimplemented set methods
+    def set(self, value: T):
+        # if not value.empty:
+        #     pass
+        self.value = value
+        self.valueChanged.emit(self.value)
+        return

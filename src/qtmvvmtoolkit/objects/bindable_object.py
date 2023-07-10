@@ -28,6 +28,7 @@ from qtmvvmtoolkit.inputs.observableproperty import (
     ObservableIntProperty,
     ObservableStrProperty,
 )
+from qtmvvmtoolkit.inputs.relayableproperty import RelayableProperty
 
 
 class BindableObject(QObject):
@@ -154,4 +155,13 @@ class BindableObject(QObject):
         observable.valueChanged.connect(widget.setValue)
         widget.valueChanged.connect(observable.set)
         observable.valueChanged.emit(observable.get())
+        return None
+
+    # Relayable
+    def binding_relayable(
+        self,
+        func: typing.Callable[[], None],
+        relayable: RelayableProperty,
+    ) -> None:
+        relayable.relayed.connect(func)
         return None
