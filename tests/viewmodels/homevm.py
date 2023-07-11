@@ -1,15 +1,17 @@
-import typing
+import random
 
-from qtmvvmtoolkit.inputs.computedproperty import ComputedObservableIntProperty, ComputedObservableBoolProperty
-from qtmvvmtoolkit.objects.observable_object import ObservableObject
-from qtmvvmtoolkit.inputs.observableproperty import (
+from qtmvvmtoolkit.objects import ObservableObject
+from qtmvvmtoolkit.inputs import (
     ObservableBoolProperty,
     ObservableIntProperty,
     ObservableStrProperty,
-    ObservableFloatProperty
+    ObservableFloatProperty,
+    ObservableCollection,
+    ComputedObservableBoolProperty,
+    RelayableProperty,
+    ComputedObservableFloatProperty
 )
-from qtmvvmtoolkit.inputs.relayableproperty import RelayableProperty
-from qtmvvmtoolkit.inputs.observable_collection import ObservableCollection
+import string
 
 
 class HomeViewModel(ObservableObject):
@@ -17,30 +19,30 @@ class HomeViewModel(ObservableObject):
         super().__init__()
         self.numbers = ObservableCollection(list(range(10)))
         self.valid_numbers = ComputedObservableBoolProperty(
-            False,
+            self.update_valid_numbers(),
             [self.numbers],
             self.update_valid_numbers
         )
 
         self.username = ObservableStrProperty("named")
-        self.voltage = ObservableIntProperty(2)
+        self.voltage = ObservableIntProperty(48)
         self.capacity = ObservableFloatProperty(100)
-        self.energy = ComputedObservableIntProperty(
-            10, [self.voltage, self.capacity], self.compute_energy
+        self.energy = ComputedObservableFloatProperty(
+            self.compute_energy(),
+            [self.voltage, self.capacity],
+            self.compute_energy
         )
         self.hide = ObservableBoolProperty(False)
         self.infos = ObservableCollection[str](["user"])
-        self.infos.valueChanged.connect(lambda value: print(value))
 
         self.changed = RelayableProperty()
         return
 
     def update_valid_numbers(self) -> bool:
         _validation = len(self.numbers.get()) != 0
-        print(self, _validation)
         return _validation
 
-    def compute_energy(self) -> typing.Type[int]:
+    def compute_energy(self) -> float:
         return self.voltage.get() * self.capacity.get()
 
     def command_call_relay(self):
@@ -49,14 +51,9 @@ class HomeViewModel(ObservableObject):
         return None
 
     def fill_numbers(self) -> None:
-        print(self.numbers.get())
-        print("is valid", self.valid_numbers.get())
+        new_name = "".join(random.choices(list(string.ascii_letters), k=10))
+        self.infos.append(new_name)
         if len(self.numbers.get()) != 0:
-            print("emptying")
-            self.numbers.set([])
-            return None
+            return self.numbers.set([])
         if len(self.numbers.get()) == 0:
-            print("filling")
-            self.numbers.set(list(range(10)))
-            return None
-        return None
+            return self.numbers.set(list(range(10)))

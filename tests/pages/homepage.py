@@ -26,7 +26,7 @@ class HomePage(QWidget, BindableObject):
 
         self.spinCapacity = QDoubleSpinBox()
         self.spinVoltage = QSpinBox()
-        self.spinEnergy = QSpinBox()
+        self.spinEnergy = QDoubleSpinBox()
         self.spinEnergy.setReadOnly(True)
         self.spinEnergy.setMaximum(99990)
         self.checkNumbers = QCheckBox(self)
@@ -56,48 +56,32 @@ class HomePage(QWidget, BindableObject):
 
     def initialize_binding(self) -> None:
 
-        self.vm.username.binding(self.labelName.setText)
-        self.vm.username.binding(self.entryName.setText)
+        # self.vm.username.binding(self.labelName.setText)
+        self.binding_label_string(self.labelName, self.vm.username)
+        # self.vm.username.binding(self.entryName.setText)
+        self.binding_textedit_str(self.entryName, self.vm.username)
         self.binding_widget(self.labelName, self.vm.hide, "visibility")
 
         self.vm.username.binding_reverse(self.entryName.textChanged)
         self.vm.hide.valueChanged.connect(self.entryName.setReadOnly)
-        self.vm.valid_numbers.binding(self.checkNumbers.setChecked)
-
-        self.vm.voltage.binding(self.spinVoltage.setValue)
-        self.vm.voltage.binding_reverse(self.spinVoltage.valueChanged)
-        self.binding_label_number(
-            self.labelVoltage, self.vm.voltage, lambda value: f'{value:5.2f} v')
+        self.binding_checkbox(self.checkNumbers, self.vm.valid_numbers)
+        self.binding_spinbox(self.spinVoltage, self.vm.voltage)
+        self.binding_label_number(self.labelVoltage, self.vm.voltage,
+                                  lambda value: f'{value:5.2f} v')
         self.binding_widget(self.spinVoltage, self.vm.hide, "visibility")
-        self.binding_doublespinbox(
-            self.spinCapacity, self.vm.capacity, "percent")
+        self.binding_doublespinbox(self.spinCapacity, self.vm.capacity)
+        self.binding_doublespinbox(self.spinEnergy, self.vm.energy)
 
-        self.vm.energy.valueChanged.connect(self.spinEnergy.setValue)
+        self.binding_command(self.buttonCall,
+                             RelayCommand(self.display_information))
 
-        self.spinEnergy.valueChanged.connect(self.vm.energy.set)
-
-        self.binding_command(
-            self.buttonCall,
-            RelayCommand(self.vm.fill_numbers),
-        )
-        # self.binding_command(
-        #     self.buttonCall,
-        #     RelayCommand(self.display_information, name="viktor"),
-        # )
-
-        self.vm.infos.binding(self.operation)
+        self.binding_combobox_items(self.cboxNames, self.vm.infos)
+        self.binding_combobox_value(self.cboxNames, self.vm.username)
         return None
 
-    def operation(self, value: list[str]):
-        self.cboxNames.clear()
-        self.cboxNames.setDuplicatesEnabled(False)
-        self.cboxNames.addItems(value)
-        return None
-
-    def display_information(self, name: str):
+    def display_information(self):
         self.launch_operation()
-        self.vm.infos.append(name)
-        self.vm.infos.append("word")
+        self.vm.fill_numbers()
         return None
 
     def launch_operation(self):
