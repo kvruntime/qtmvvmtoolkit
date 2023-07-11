@@ -7,7 +7,7 @@ name = "pypi"
 pyqt6 = "6.4.2"
 pyqtdarktheme = "2.1.0"
 qtpy = "*"
-pandas = "==2.0.3"
+pandas = "2.0.3"
 
 [dev-packages]
 mypy = "1.1.1"
