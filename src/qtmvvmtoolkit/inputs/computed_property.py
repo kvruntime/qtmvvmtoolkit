@@ -4,7 +4,8 @@ from typing import Generic, TypeVar
 from PyQt6 import QtCore
 from PyQt6.QtCore import *
 
-from qtmvvmtoolkit.inputs.observableproperty import ObservableProperty
+# from qtmvvmtoolkit.inputs import ObservableProperty
+from qtmvvmtoolkit.inputs.observable_property import ObservableProperty
 
 T = TypeVar("T", int, str, float, object, bool)
 Types = [[object], [int], [float], [str], [bool]]
@@ -82,7 +83,7 @@ class ComputedObservableIntProperty(ComputedObservableProperty[int]):
         update_function: typing.Callable[..., int],
     ) -> None:
         super().__init__(value, observable_props, update_function, item=int)
-        pass
+        return
 
 
 class ComputedObservableStrProperty(ComputedObservableProperty[str]):

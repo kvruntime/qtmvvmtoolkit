@@ -16,7 +16,7 @@ class RelayableProperty(QtCore.QObject):
 
     def __init__(self) -> None:
         super().__init__()
-        pass
+        return
 
     def call(self) -> None:
         self.relayed.emit()

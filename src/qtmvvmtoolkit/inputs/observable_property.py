@@ -2,7 +2,6 @@
 import typing
 from typing import Generic, TypeVar
 import pandas as pd
-# from PyQt6.QtCore import *
 from qtpy.QtCore import QObject, Signal
 from PyQt6.QtCore import pyqtBoundSignal
 

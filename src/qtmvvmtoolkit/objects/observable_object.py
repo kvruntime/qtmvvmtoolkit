@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
 import logging
 
-from PyQt6.QtCore import QObject
+from qtpy.QtCore import QObject
+from qtpy.QtWidgets import QWidget, QApplication
 
 
 class ObservableObject(QObject):
@@ -22,3 +23,7 @@ class ObservableObject(QObject):
 
     def update_viewmodel(self) -> None:
         return None
+
+    def get_current_opened_widget(self) -> QWidget:
+        current_widget = [w for w in QApplication.topLevelWidgets() if w.isVisible()][0]
+        return current_widget

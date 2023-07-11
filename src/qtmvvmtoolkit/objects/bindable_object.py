@@ -9,26 +9,23 @@ from qtpy.QtWidgets import (
     QPushButton,
     QToolButton,
     QLineEdit,
-    QTextEdit,
-    QLabel, QSpinBox, QDoubleSpinBox
+    QTextEdit, QCheckBox,
+    QLabel, QSpinBox, QDoubleSpinBox, QComboBox
 )
 
-# from qtpy.QtWidgets import *
 from qtmvvmtoolkit.commands import RelayCommand
-from qtmvvmtoolkit.inputs.computedproperty import (
+from qtmvvmtoolkit.inputs import (
     ComputedObservableBoolProperty,
     ComputedObservableFloatProperty,
     ComputedObservableIntProperty,
     ComputedObservableStrProperty,
-)
-
-from qtmvvmtoolkit.inputs.observableproperty import (
+    ObservableCollection,
     ObservableBoolProperty,
     ObservableFloatProperty,
     ObservableIntProperty,
     ObservableStrProperty,
+    RelayableProperty
 )
-from qtmvvmtoolkit.inputs.relayableproperty import RelayableProperty
 
 
 class BindableObject(QObject):
@@ -59,19 +56,32 @@ class BindableObject(QObject):
         return None
 
     # Input widgets
-    # def binding_inputs_str(
-    #     self,
-    #     widget: typing.Union[QLineEdit, QTextEdit],
-    #     observable: typing.Union[
-    #         ObservableIntProperty,
-    #         ObservableFloatProperty,
-    #         ComputedObservableIntProperty,
-    #         ComputedObservableFloatProperty,
-    #     ],
-    # ) -> None:
-    #     observable.valueChanged.connect(lambda value:widget.setText(str(value)))
-    #     observable.valueChanged.emit(observable.get())
-    #     return None
+    def binding_textedit_number(
+        self,
+        widget: QLineEdit,
+        observable: typing.Union[
+            ObservableIntProperty,
+            ObservableFloatProperty,
+            ComputedObservableIntProperty,
+            ComputedObservableFloatProperty,
+        ],
+    ) -> None:
+        widget.setReadOnly(True)
+        observable.valueChanged.connect(
+            lambda value: widget.setText(str(value)))
+        observable.valueChanged.emit(observable.get())
+        return None
+
+    def binding_textedit_str(
+        self,
+        widget: QLineEdit,
+        observable: typing.Union[ObservableStrProperty,
+                                 ComputedObservableStrProperty],
+    ) -> None:
+        observable.valueChanged.connect(widget.setText)
+        widget.textChanged.connect(observable.set)
+        observable.valueChanged.emit(observable.get())
+        return None
 
     def binding_label_number(
         self,
@@ -103,8 +113,9 @@ class BindableObject(QObject):
         widget: QLabel,
         observable: typing.Union[ObservableStrProperty, ComputedObservableStrProperty],
     ) -> None:
-        raise NotImplementedError("Unavalaible for now")
-        # return
+        observable.valueChanged.connect(widget.setText)
+        observable.valueChanged.emit(observable.get())
+        return None
 
     # Commands
     def binding_command(
@@ -157,7 +168,44 @@ class BindableObject(QObject):
         observable.valueChanged.emit(observable.get())
         return None
 
+    # Comboxbox
+    def binding_combobox_items(
+        self,
+        widget: QComboBox,
+        observable: ObservableCollection[typing.Any]
+    ) -> None:
+        # TODO: assume all value are converted into str before call addItems
+        widget.setDuplicatesEnabled(False)
+        observable.valueChanged.connect(widget.clear)
+        observable.valueChanged.connect(widget.addItems)
+        observable.valueChanged.emit(observable.value)
+        return None
+
+    def binding_combobox_value(
+        self,
+        widget: QComboBox,
+        observable: typing.Union[ObservableStrProperty,
+                                 ComputedObservableStrProperty]
+    ) -> None:
+        # TODO: assume all value are converted into str before call addItems
+        widget.currentTextChanged.connect(observable.set)
+        # widget.currentTextChanged.emit(widget.currentText)
+        return None
+
+    # QCheckBox
+    def binding_checkbox(
+        self,
+        widget: QCheckBox,
+        observable: typing.Union[ObservableBoolProperty,
+                                 ComputedObservableBoolProperty]
+    ) -> None:
+        observable.valueChanged.connect(widget.setChecked)
+        widget.stateChanged.connect(observable.set)
+        observable.valueChanged.emit(observable.get())
+        return None
+
     # Relayable
+
     def binding_relayable(
         self,
         func: typing.Callable[[], None],
