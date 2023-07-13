@@ -2,7 +2,8 @@
 import typing
 
 from qtpy.QtWidgets import QMainWindow, QWidget
-from .ishell import RouteItem, IShell
+
+from .ishell import IShell, RouteItem
 
 
 class MainWindowShell(IShell):

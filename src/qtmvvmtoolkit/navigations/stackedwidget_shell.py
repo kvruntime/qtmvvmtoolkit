@@ -1,6 +1,7 @@
 import typing
 
 from PyQt6.QtWidgets import *
+
 from .ishell import IShell, RouteItem
 
 

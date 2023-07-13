@@ -1,17 +1,17 @@
 import random
+import string
 
-from qtmvvmtoolkit.objects import ObservableObject
 from qtmvvmtoolkit.inputs import (
+    ComputedObservableBoolProperty,
+    ComputedObservableFloatProperty,
     ObservableBoolProperty,
+    ObservableCollection,
+    ObservableFloatProperty,
     ObservableIntProperty,
     ObservableStrProperty,
-    ObservableFloatProperty,
-    ObservableCollection,
-    ComputedObservableBoolProperty,
     RelayableProperty,
-    ComputedObservableFloatProperty
 )
-import string
+from qtmvvmtoolkit.objects import ObservableObject
 
 
 class HomeViewModel(ObservableObject):
@@ -19,18 +19,14 @@ class HomeViewModel(ObservableObject):
         super().__init__()
         self.numbers = ObservableCollection(list(range(10)))
         self.valid_numbers = ComputedObservableBoolProperty(
-            self.update_valid_numbers(),
-            [self.numbers],
-            self.update_valid_numbers
+            self.update_valid_numbers(), [self.numbers], self.update_valid_numbers
         )
 
         self.username = ObservableStrProperty("named")
         self.voltage = ObservableIntProperty(48)
         self.capacity = ObservableFloatProperty(100)
         self.energy = ComputedObservableFloatProperty(
-            self.compute_energy(),
-            [self.voltage, self.capacity],
-            self.compute_energy
+            self.compute_energy(), [self.voltage, self.capacity], self.compute_energy
         )
         self.hide = ObservableBoolProperty(False)
         self.infos = ObservableCollection[str](["user"])

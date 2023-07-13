@@ -1,11 +1,11 @@
-from os import name
 import typing
+from os import name
 
 from PyQt6.QtWidgets import *
-from qtmvvmtoolkit.objects.bindable_object import BindableObject
 from viewmodels.homevm import HomeViewModel
 
 from qtmvvmtoolkit.commands import RelayCommand
+from qtmvvmtoolkit.objects.bindable_object import BindableObject
 
 
 class HomePage(QWidget, BindableObject):
@@ -55,7 +55,6 @@ class HomePage(QWidget, BindableObject):
         return None
 
     def initialize_binding(self) -> None:
-
         # self.vm.username.binding(self.labelName.setText)
         self.binding_label_string(self.labelName, self.vm.username)
         # self.vm.username.binding(self.entryName.setText)
@@ -66,14 +65,14 @@ class HomePage(QWidget, BindableObject):
         self.vm.hide.valueChanged.connect(self.entryName.setReadOnly)
         self.binding_checkbox(self.checkNumbers, self.vm.valid_numbers)
         self.binding_spinbox(self.spinVoltage, self.vm.voltage)
-        self.binding_label_number(self.labelVoltage, self.vm.voltage,
-                                  lambda value: f'{value:5.2f} v')
+        self.binding_label_number(
+            self.labelVoltage, self.vm.voltage, lambda value: f"{value:5.2f} v"
+        )
         self.binding_widget(self.spinVoltage, self.vm.hide, "visibility")
         self.binding_doublespinbox(self.spinCapacity, self.vm.capacity)
         self.binding_doublespinbox(self.spinEnergy, self.vm.energy)
 
-        self.binding_command(self.buttonCall,
-                             RelayCommand(self.display_information))
+        self.binding_command(self.buttonCall, RelayCommand(self.display_information))
 
         self.binding_combobox_items(self.cboxNames, self.vm.infos)
         self.binding_combobox_value(self.cboxNames, self.vm.username)

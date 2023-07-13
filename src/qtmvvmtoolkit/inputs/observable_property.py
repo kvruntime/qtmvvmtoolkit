@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
 import typing
 from typing import Generic, TypeVar
-import pandas as pd
-from qtpy.QtCore import QObject, Signal
-from PyQt6.QtCore import pyqtBoundSignal
 
+import pandas as pd
+from PyQt6.QtCore import pyqtBoundSignal
+from qtpy.QtCore import QObject, Signal
 
 T = TypeVar("T", int, str, float, object, bool)
 Types = [[object], [int], [float], [str], [bool], [pd.DataFrame]]
@@ -95,6 +95,7 @@ class ObservableDataFrameProperty(ObservableProperty[pd.DataFrame]):
     def __init__(self, value: pd.DataFrame) -> None:
         super().__init__(value, item=pd.DataFrame)
         return
+
     # TODO: reimplemented set methods
     def set(self, value: T):
         # if not value.empty:

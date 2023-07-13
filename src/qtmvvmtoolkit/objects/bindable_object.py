@@ -1,16 +1,19 @@
 # -*- coding:utf-8 -*-
 import typing
-from qtpy.QtCore import QObject
+
 from PyQt6.QtGui import QAction
-
-
+from qtpy.QtCore import QObject
 from qtpy.QtWidgets import (
-    QWidget,
-    QPushButton,
-    QToolButton,
+    QCheckBox,
+    QComboBox,
+    QDoubleSpinBox,
+    QLabel,
     QLineEdit,
-    QTextEdit, QCheckBox,
-    QLabel, QSpinBox, QDoubleSpinBox, QComboBox
+    QPushButton,
+    QSpinBox,
+    QTextEdit,
+    QToolButton,
+    QWidget,
 )
 
 from qtmvvmtoolkit.commands import RelayCommand
@@ -19,17 +22,20 @@ from qtmvvmtoolkit.inputs import (
     ComputedObservableFloatProperty,
     ComputedObservableIntProperty,
     ComputedObservableStrProperty,
-    ObservableCollection,
     ObservableBoolProperty,
+    ObservableCollection,
     ObservableFloatProperty,
     ObservableIntProperty,
     ObservableStrProperty,
-    RelayableProperty
+    RelayableProperty,
 )
 
 
 class BindableObject(QObject):
-    def __init__(self, parent: typing.Optional[QWidget] = None, ) -> None:
+    def __init__(
+        self,
+        parent: typing.Optional[QWidget] = None,
+    ) -> None:
         super().__init__(parent)
         return
 
@@ -67,16 +73,14 @@ class BindableObject(QObject):
         ],
     ) -> None:
         widget.setReadOnly(True)
-        observable.valueChanged.connect(
-            lambda value: widget.setText(str(value)))
+        observable.valueChanged.connect(lambda value: widget.setText(str(value)))
         observable.valueChanged.emit(observable.get())
         return None
 
     def binding_textedit_str(
         self,
         widget: QLineEdit,
-        observable: typing.Union[ObservableStrProperty,
-                                 ComputedObservableStrProperty],
+        observable: typing.Union[ObservableStrProperty, ComputedObservableStrProperty],
     ) -> None:
         observable.valueChanged.connect(widget.setText)
         widget.textChanged.connect(observable.set)
@@ -92,8 +96,9 @@ class BindableObject(QObject):
             ComputedObservableIntProperty,
             ComputedObservableFloatProperty,
         ],
-        transformer: typing.Optional[typing.Callable[[
-            typing.Union[int, float]], str]] = None,
+        transformer: typing.Optional[
+            typing.Callable[[typing.Union[int, float]], str]
+        ] = None,
     ) -> None:
         if not transformer:
             observable.valueChanged.connect(
@@ -134,13 +139,13 @@ class BindableObject(QObject):
         self,
         widget: QSpinBox,
         observable: typing.Union[ObservableIntProperty, ComputedObservableIntProperty],
-        transformer: typing.Optional[typing.Literal["percent"]] = None
+        transformer: typing.Optional[typing.Literal["percent"]] = None,
     ) -> None:
         if transformer == "percent":
             observable.valueChanged.connect(
-                lambda value: widget.setValue(int(value*100)))
-            widget.valueChanged.connect(
-                lambda value: observable.set(int(value/100)))
+                lambda value: widget.setValue(int(value * 100))
+            )
+            widget.valueChanged.connect(lambda value: observable.set(int(value / 100)))
             observable.valueChanged.emit(observable.get())
             return None
 
@@ -152,14 +157,15 @@ class BindableObject(QObject):
     def binding_doublespinbox(
         self,
         widget: QDoubleSpinBox,
-        observable: typing.Union[ObservableFloatProperty, ComputedObservableFloatProperty,],
-        transformer: typing.Optional[typing.Literal["percent"]] = None
+        observable: typing.Union[
+            ObservableFloatProperty,
+            ComputedObservableFloatProperty,
+        ],
+        transformer: typing.Optional[typing.Literal["percent"]] = None,
     ) -> None:
         if transformer == "percent":
-            observable.valueChanged.connect(
-                lambda value: widget.setValue(value*100))
-            widget.valueChanged.connect(
-                lambda value: observable.set(value/100))
+            observable.valueChanged.connect(lambda value: widget.setValue(value * 100))
+            widget.valueChanged.connect(lambda value: observable.set(value / 100))
             observable.valueChanged.emit(observable.get())
             return None
 
@@ -170,34 +176,42 @@ class BindableObject(QObject):
 
     # Comboxbox
     def binding_combobox_items(
-        self,
-        widget: QComboBox,
-        observable: ObservableCollection[typing.Any]
+        self, widget: QComboBox, observable: ObservableCollection[typing.Any]
     ) -> None:
         # TODO: assume all value are converted into str before call addItems
         widget.setDuplicatesEnabled(False)
         observable.valueChanged.connect(widget.clear)
-        observable.valueChanged.connect(widget.addItems)
+        # observable.valueChanged.connect(widget.addItems) Old
+        observable.valueChanged.connect(
+            lambda values: (
+                [
+                    widget.addItem(str(value), userData=QVariant(value))
+                    for value in values
+                ]
+            )
+        )
         observable.valueChanged.emit(observable.value)
         return None
 
     def binding_combobox_value(
         self,
         widget: QComboBox,
-        observable: typing.Union[ObservableStrProperty,
-                                 ComputedObservableStrProperty]
+        observable: typing.Union[ObservableStrProperty, ComputedObservableStrProperty],
     ) -> None:
         # TODO: assume all value are converted into str before call addItems
-        widget.currentTextChanged.connect(observable.set)
+        # widget.currentTextChanged.connect(observable.set) Old
         # widget.currentTextChanged.emit(widget.currentText)
+        widget.currentTextChanged.connect(lambda: observable.set(widget.currentData()))
+        widget.currentTextChanged.emit(widget.currentText())
         return None
 
     # QCheckBox
     def binding_checkbox(
         self,
         widget: QCheckBox,
-        observable: typing.Union[ObservableBoolProperty,
-                                 ComputedObservableBoolProperty]
+        observable: typing.Union[
+            ObservableBoolProperty, ComputedObservableBoolProperty
+        ],
     ) -> None:
         observable.valueChanged.connect(widget.setChecked)
         widget.stateChanged.connect(observable.set)

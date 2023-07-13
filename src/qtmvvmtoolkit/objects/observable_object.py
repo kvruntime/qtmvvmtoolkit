@@ -2,7 +2,7 @@
 import logging
 
 from qtpy.QtCore import QObject
-from qtpy.QtWidgets import QWidget, QApplication
+from qtpy.QtWidgets import QApplication, QWidget
 
 
 class ObservableObject(QObject):
@@ -19,7 +19,6 @@ class ObservableObject(QObject):
         self._logger.setLevel(logging.NOTSET)
         self._logger.addHandler(stream_handler)
         return
-
 
     def update_viewmodel(self) -> None:
         return None

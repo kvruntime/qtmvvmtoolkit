@@ -1,5 +1,6 @@
 # coding:utf-8
 import typing
+
 # from PyQt6.QtCore import QObject
 from qtpy.QtCore import QObject, Signal
 from qtpy.QtWidgets import QComboBox
@@ -48,7 +49,7 @@ class ObservableCollection(QObject, typing.Generic[T]):
         self.valueChanged.emit(self.get())
         return None
 
-    def bind_combobox(self, widget:QComboBox):
+    def bind_combobox(self, widget: QComboBox):
         widget.clear()
         self.valueChanged.connect(widget.addItems)
         self.valueChanged.emit(self.value)

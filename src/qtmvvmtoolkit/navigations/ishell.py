@@ -1,9 +1,10 @@
 # coding:utf-8
 
-from dataclasses import dataclass
 import typing
-from qtpy.QtWidgets import QWidget
+from dataclasses import dataclass
+
 from qtpy.QtCore import QObject
+from qtpy.QtWidgets import QWidget
 
 
 @dataclass
