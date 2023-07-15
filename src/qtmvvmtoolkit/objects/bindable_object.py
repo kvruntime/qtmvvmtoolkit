@@ -2,7 +2,7 @@
 import typing
 
 from PyQt6.QtGui import QAction
-from qtpy.QtCore import QObject
+from qtpy.QtCore import QObject,QVariant
 from qtpy.QtWidgets import (
     QCheckBox,
     QComboBox,
