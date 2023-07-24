@@ -1,7 +1,7 @@
-import typing
-from os import name
-
+# coding:utf-8
 from PyQt6.QtWidgets import *
+from PyQt6.QtGui import *
+from qtmvvmtoolkit.widgets.navbutton import NavButton
 from viewmodels.homevm import HomeViewModel
 
 from qtmvvmtoolkit.commands import RelayCommand
@@ -18,7 +18,23 @@ class HomePage(QWidget, BindableObject):
         return
 
     def initialize_component(self):
+        lay = QHBoxLayout()
+        btn1 = NavButton("btn-1")
+        btn1.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ArrowBack))
+        lay.addWidget(btn1)
+        lay.addWidget(
+            NavButton(
+                "btn-1",
+                icon=self.style().standardIcon(
+                    QStyle.StandardPixmap.SP_DialogHelpButton
+                ),
+            )
+        )
+        lay.addWidget(NavButton("btn-3"))
+        lay.addStretch()
+
         layout = QVBoxLayout(self)
+        layout.addLayout(lay)
 
         self.entryName = QLineEdit(self)
         self.labelName = QLabel("--#--", self)
@@ -51,6 +67,7 @@ class HomePage(QWidget, BindableObject):
         layout.addWidget(QLabel("<h2>Observables Collections</h2>"))
         layout.addWidget(self.cboxNames)
         layout.addWidget(self.checkNumbers)
+        layout.addStretch()
 
         return None
 
