@@ -1,10 +1,12 @@
-# -*- coding:utf-8 -*-
+# coding:utf-8
 import typing
 from pathlib import Path
+import warnings
 
-from PyQt6.QtGui import *
-from PyQt6.QtWidgets import *
-from qtpy.QtCore import Qt, QSize
+from qtpy.QtWidgets import QToolButton, QPushButton, QWidget
+from qtpy.QtCore import QSize, Qt
+
+from qtpy.QtGui import QIcon
 
 from qtmvvmtoolkit.navigation import NavigationManager
 
@@ -22,19 +24,20 @@ class NavButton(QToolButton, QPushButton):
         super().__init__()
         self.setParent(parent)  # type: ignore FIXME: fix element assignation
         self.setText(text)
+        self.setIconSize(QSize(30, 30))
+        self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
         self._navigation_manager = router
         self._path = path
-        self.setIconSize(QSize(30,30))
 
         if icon_path:
             self.setIcon(QIcon(icon_path.as_posix()))
 
         if icon:
             self.setIcon(icon)
+
         self.clicked.connect(self._goto)
         # config
-        self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
-        pass
+        return
 
     def _goto(self):
         if self._navigation_manager:
@@ -42,10 +45,12 @@ class NavButton(QToolButton, QPushButton):
         return None
 
     def set_navigation_manager(self, navigation_manager: NavigationManager):
+        warnings.warn("deprecated: this function will be remove nextly")
         self._navigation_manager = navigation_manager
         return
 
     def set_path(self, path: str):
+        warnings.warn("deprecated: this function will be remove nextly")
         self._path = path
         return None
 
