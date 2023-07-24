@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from pathlib import Path
 import typing
 
 from PyQt6.QtGui import QAction
@@ -182,16 +183,31 @@ class BindableObject(QObject):
         widget.setDuplicatesEnabled(False)
         observable.valueChanged.connect(widget.clear)
         # observable.valueChanged.connect(widget.addItems) Old
+        # observable.valueChanged.connect(
+        #     lambda values: (
+        #         [
+        #             widget.addItem(str(value), userData=QVariant(value))
+        #             for value in values
+        #         ]
+        #     )
+        # )
         observable.valueChanged.connect(
-            lambda values: (
-                [
-                    widget.addItem(str(value), userData=QVariant(value))
-                    for value in values
-                ]
-            )
+            lambda values: self._fill_combobox_items(widget, values)
         )
         observable.valueChanged.emit(observable.value)
+        # widget.setCurrentIndex(-1)
         return None
+
+    def _fill_combobox_items(
+        self, widget: QComboBox, values: typing.List[typing.Any]
+    ) -> None:
+        for value in values:
+            if isinstance(value, Path):
+                widget.addItem(value.name, userData=QVariant(value))
+            else:
+                widget.addItem(str(value), userData=QVariant(value))
+        widget.setCurrentIndex(-1)
+        return
 
     def binding_combobox_value(
         self,

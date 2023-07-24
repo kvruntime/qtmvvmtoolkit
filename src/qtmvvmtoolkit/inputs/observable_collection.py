@@ -1,11 +1,12 @@
 # coding:utf-8
+from pathlib import Path
 import typing
 
 # from PyQt6.QtCore import QObject
 from qtpy.QtCore import QObject, Signal
 from qtpy.QtWidgets import QComboBox
 
-T = typing.TypeVar("T", int, str, float, object, bool, object)
+T = typing.TypeVar("T", int, str, float, object, bool, object, Path)
 
 
 class ObservableCollection(QObject, typing.Generic[T]):

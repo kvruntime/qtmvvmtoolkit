@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from pathlib import Path
 import typing
 from typing import Generic, TypeVar
 
@@ -6,8 +7,8 @@ import pandas as pd
 from PyQt6.QtCore import pyqtBoundSignal
 from qtpy.QtCore import QObject, Signal
 
-T = TypeVar("T", int, str, float, object, bool)
-Types = [[object], [int], [float], [str], [bool], [pd.DataFrame]]
+T = TypeVar("T", int, str, float, object, bool, pd.DataFrame, Path)
+Types = [[object], [int], [float], [str], [bool], [pd.DataFrame],[Path]]
 
 
 class ObservableProperty(QObject, Generic[T]):
@@ -88,6 +89,10 @@ class ObservableIntProperty(ObservableProperty[int]):
 class ObservableStrProperty(ObservableProperty[str]):
     def __init__(self, value: str) -> None:
         super().__init__(value, item=str)
+        return
+class ObservablePathProperty(ObservableProperty[Path]):
+    def __init__(self, value: Path) -> None:
+        super().__init__(value, item=Path)
         return
 
 
