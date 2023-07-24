@@ -1,11 +1,11 @@
 # coding:utf-8
-from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
-from qtmvvmtoolkit.widgets.navbutton import NavButton
+from PyQt6.QtWidgets import *
 from viewmodels.homevm import HomeViewModel
 
 from qtmvvmtoolkit.commands import RelayCommand
 from qtmvvmtoolkit.objects.bindable_object import BindableObject
+from qtmvvmtoolkit.widgets.navbutton import NavButton
 
 
 class HomePage(QWidget, BindableObject):
