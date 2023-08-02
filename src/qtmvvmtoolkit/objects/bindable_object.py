@@ -206,7 +206,7 @@ class BindableObject(QObject):
                 widget.addItem(value.name, userData=QVariant(value))
             else:
                 widget.addItem(str(value), userData=QVariant(value))
-        widget.setCurrentIndex(-1)
+        # widget.setCurrentIndex(-1)
         return
 
     def binding_combobox_value(
