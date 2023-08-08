@@ -72,13 +72,11 @@ class HomePage(QWidget, BindableObject):
         return None
 
     def initialize_binding(self) -> None:
-        # self.vm.username.binding(self.labelName.setText)
         self.binding_label_string(self.labelName, self.vm.username)
-        # self.vm.username.binding(self.entryName.setText)
         self.binding_textedit_str(self.entryName, self.vm.username)
         self.binding_widget(self.labelName, self.vm.hide, "visibility")
 
-        self.vm.username.binding_reverse(self.entryName.textChanged)
+        self.vm.username.rbinding(self.entryName.textChanged)
         self.vm.hide.valueChanged.connect(self.entryName.setReadOnly)
         self.binding_checkbox(self.checkNumbers, self.vm.valid_numbers)
         self.binding_spinbox(self.spinVoltage, self.vm.voltage)
@@ -91,8 +89,9 @@ class HomePage(QWidget, BindableObject):
 
         self.binding_command(self.buttonCall, RelayCommand(self.display_information))
 
-        self.binding_combobox_items(self.cboxNames, self.vm.infos)
-        self.binding_combobox_value(self.cboxNames, self.vm.username)
+        self.binding_combobox_items(self.cboxNames, self.vm.infos, True)
+        # self.binding_combobox_value(self.cboxNames, self.vm.username)
+        self.binding_combobox_realvalue(self.cboxNames, self.vm.username)
         return None
 
     def display_information(self):

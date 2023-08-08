@@ -2,13 +2,14 @@
 from pathlib import Path
 import typing
 from typing import Generic, TypeVar
+import warnings
 
 import pandas as pd
 from PyQt6.QtCore import pyqtBoundSignal
 from qtpy.QtCore import QObject, Signal
 
 T = TypeVar("T", int, str, float, object, bool, pd.DataFrame, Path)
-Types = [[object], [int], [float], [str], [bool], [pd.DataFrame],[Path]]
+Types = [[object], [int], [float], [str], [bool], [pd.DataFrame], [Path]]
 
 
 class ObservableProperty(QObject, Generic[T]):
@@ -31,13 +32,13 @@ class ObservableProperty(QObject, Generic[T]):
             self.valueChanged.emit(self.value)
         return
 
-    def binding(self, method: typing.Callable[[typing.Any], None]) -> None:
+    def binding(self, method: typing.Callable[..., None]) -> None:
         """One way binding"""
         self.valueChanged.connect(method)
         self.valueChanged.emit(self.get())
         return None
 
-    def binding_reverse(self, signal: pyqtBoundSignal) -> None:
+    def rbinding(self, signal: pyqtBoundSignal) -> None:
         """Reverse binding method"""
         signal.connect(self.set)
         self.valueChanged.emit(self.get())
@@ -47,7 +48,7 @@ class ObservableProperty(QObject, Generic[T]):
 class ObservableBoolProperty(ObservableProperty[bool]):
     def __init__(self, value: bool) -> None:
         super().__init__(value, item=bool)
-        pass
+        return
 
 
 class ObservableFloatProperty(ObservableProperty[float]):
@@ -55,14 +56,16 @@ class ObservableFloatProperty(ObservableProperty[float]):
         super().__init__(value, item=float)
         return
 
-    def binding_percent(self, method: typing.Callable[[typing.Any], None]) -> None:
+    def binding_percent(self, method: typing.Callable[..., None]) -> None:
         """One way binding"""
+        warnings.warn("this method is depreacated")
         self.valueChanged.connect(lambda value: method(value * 100))
         self.valueChanged.emit(self.get())
         return None
 
-    def binding_reverse_percent(self, signal: pyqtBoundSignal) -> None:
+    def rbinding_percent(self, signal: pyqtBoundSignal) -> None:
         """Reverse binding method"""
+        warnings.warn("this method is depreacated")
         signal.connect(lambda value: self.set(value / 100))
         self.valueChanged.emit(self.get())
         return None
@@ -73,14 +76,16 @@ class ObservableIntProperty(ObservableProperty[int]):
         super().__init__(value, item=int)
         return
 
-    def binding_percent(self, method: typing.Callable[[typing.Any], None]) -> None:
+    def binding_percent(self, method: typing.Callable[..., None]) -> None:
         """One way binding"""
+        warnings.warn("this method is depreacated")
         self.valueChanged.connect(lambda value: method(value * 100))
         self.valueChanged.emit(self.get())
         return None
 
     def binding_reverse_percent(self, signal: pyqtBoundSignal) -> None:
         """Reverse binding method"""
+        warnings.warn("this method is depreacated")
         signal.connect(lambda value: self.set(value / 100))
         self.valueChanged.emit(self.get())
         return None
@@ -90,6 +95,8 @@ class ObservableStrProperty(ObservableProperty[str]):
     def __init__(self, value: str) -> None:
         super().__init__(value, item=str)
         return
+
+
 class ObservablePathProperty(ObservableProperty[Path]):
     def __init__(self, value: Path) -> None:
         super().__init__(value, item=Path)
@@ -103,8 +110,6 @@ class ObservableDataFrameProperty(ObservableProperty[pd.DataFrame]):
 
     # TODO: reimplemented set methods
     def set(self, value: T):
-        # if not value.empty:
-        #     pass
         self.value = value
         self.valueChanged.emit(self.value)
         return

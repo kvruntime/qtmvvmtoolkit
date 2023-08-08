@@ -1,24 +1,25 @@
+# coding:utf-8
 import typing
 from typing import Generic, TypeVar
 
-from PyQt6 import QtCore
+from qtpy.QtCore import QObject, Signal
 from PyQt6.QtCore import *
 
 # from qtmvvmtoolkit.inputs import ObservableProperty
-from qtmvvmtoolkit.inputs.observable_property import ObservableProperty
+from .observable_property import ObservableProperty
 
 T = TypeVar("T", int, str, float, object, bool)
 Types = [[object], [int], [float], [str], [bool]]
 
 
-class ComputedObservableProperty(QtCore.QObject, Generic[T]):
-    valueChanged = QtCore.pyqtSignal(*Types, name="valueChanged")
+class ComputedObservableProperty(QObject, Generic[T]):
+    valueChanged = Signal(*Types, name="valueChanged")
 
     def __init__(
         self,
         value: T,
         observable_props: typing.List[ObservableProperty[typing.Any]],
-        update_function: typing.Callable[[], T],
+        update_function: typing.Callable[..., T],
         item: T,
     ) -> None:
         super().__init__()
@@ -45,7 +46,7 @@ class ComputedObservableProperty(QtCore.QObject, Generic[T]):
         self.set(_result)
         return None
 
-    def binding(self, method: typing.Callable[[], None]) -> None:
+    def binding(self, method: typing.Callable[..., None]) -> None:
         """One way binding"""
         self.valueChanged.connect(method)
         self.valueChanged.emit(self.get())
@@ -90,7 +91,11 @@ class ComputedObservableStrProperty(ComputedObservableProperty[str]):
     def __init__(
         self,
         value: str,
-        observable_props: typing.List[ObservableProperty],
+        observable_props: typing.List[
+            typing.Union[
+                ObservableProperty[typing.Any], ComputedObservableProperty[typing.Any]
+            ]
+        ],
         update_function: typing.Callable[..., str],
     ) -> None:
         super().__init__(value, observable_props, update_function, item=str)
