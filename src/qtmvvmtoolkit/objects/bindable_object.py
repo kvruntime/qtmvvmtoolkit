@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from pathlib import Path
 import typing
+import warnings
 
 from PyQt6.QtGui import QAction
 from qtpy.QtCore import QObject, QVariant
@@ -15,6 +16,7 @@ from qtpy.QtWidgets import (
     QTextEdit,
     QToolButton,
     QWidget,
+    QRadioButton,
 )
 
 from qtmvvmtoolkit.commands import RelayCommand
@@ -30,6 +32,8 @@ from qtmvvmtoolkit.inputs import (
     ObservableStrProperty,
     RelayableProperty,
 )
+from qtmvvmtoolkit.inputs.computed_property import ComputedObservableProperty
+from qtmvvmtoolkit.inputs.observable_property import ObservableProperty
 
 
 class BindableObject(QObject):
@@ -41,10 +45,10 @@ class BindableObject(QObject):
         return
 
     def initialize_component(self) -> None:
-        raise NotImplementedError()
+        return None
 
     def initialize_binding(self) -> None:
-        raise NotImplementedError()
+        return None
 
     # Widgets
     def binding_widget(
@@ -81,7 +85,10 @@ class BindableObject(QObject):
     def binding_textedit_str(
         self,
         widget: QLineEdit,
-        observable: typing.Union[ObservableStrProperty, ComputedObservableStrProperty],
+        observable: typing.Union[
+            ObservableStrProperty,
+            ComputedObservableStrProperty,
+        ],
     ) -> None:
         observable.valueChanged.connect(widget.setText)
         widget.textChanged.connect(observable.set)
@@ -110,7 +117,6 @@ class BindableObject(QObject):
                 lambda value: widget.setText(transformer((value))),
             )
 
-            pass
         observable.valueChanged.emit(observable.get())
         return
 
@@ -126,12 +132,14 @@ class BindableObject(QObject):
     # Commands
     def binding_command(
         self,
-        widget: typing.Union[QPushButton, QToolButton, QAction],
+        widget: typing.Union[QPushButton, QToolButton, QAction, QRadioButton],
         command: RelayCommand,
     ) -> None:
         if isinstance(widget, (QAction, QToolButton)):
             widget.triggered.connect(command)
         if isinstance(widget, QPushButton):
+            widget.clicked.connect(command)
+        if isinstance(widget, QRadioButton):
             widget.clicked.connect(command)
         return None
 
@@ -139,7 +147,10 @@ class BindableObject(QObject):
     def binding_spinbox(
         self,
         widget: QSpinBox,
-        observable: typing.Union[ObservableIntProperty, ComputedObservableIntProperty],
+        observable: typing.Union[
+            ObservableIntProperty,
+            ComputedObservableIntProperty,
+        ],
         transformer: typing.Optional[typing.Literal["percent"]] = None,
     ) -> None:
         if transformer == "percent":
@@ -177,25 +188,25 @@ class BindableObject(QObject):
 
     # Comboxbox
     def binding_combobox_items(
-        self, widget: QComboBox, observable: ObservableCollection[typing.Any]
+        self,
+        widget: QComboBox,
+        observable: ObservableCollection[typing.Any],
+        select_default: bool = True,
+        max_visible_items: int = 7,
     ) -> None:
         # TODO: assume all value are converted into str before call addItems
         widget.setDuplicatesEnabled(False)
+        widget.setMaxVisibleItems(max_visible_items)
         observable.valueChanged.connect(widget.clear)
-        # observable.valueChanged.connect(widget.addItems) Old
-        # observable.valueChanged.connect(
-        #     lambda values: (
-        #         [
-        #             widget.addItem(str(value), userData=QVariant(value))
-        #             for value in values
-        #         ]
-        #     )
-        # )
         observable.valueChanged.connect(
             lambda values: self._fill_combobox_items(widget, values)
         )
-        observable.valueChanged.emit(observable.value)
-        # widget.setCurrentIndex(-1)
+        if select_default:
+            observable.valueChanged.emit(observable.value)
+            # widget.setCurrentIndex(0)
+        else:
+            widget.setCurrentIndex(-1)
+            observable.valueChanged.emit(observable.value)
         return None
 
     def _fill_combobox_items(
@@ -206,19 +217,33 @@ class BindableObject(QObject):
                 widget.addItem(value.name, userData=QVariant(value))
             else:
                 widget.addItem(str(value), userData=QVariant(value))
-        # widget.setCurrentIndex(-1)
         return
 
     def binding_combobox_value(
         self,
         widget: QComboBox,
-        observable: typing.Union[ObservableStrProperty, ComputedObservableStrProperty],
+        observable: typing.Union[
+            ObservableStrProperty,
+            ComputedObservableStrProperty,
+        ],
     ) -> None:
         # TODO: assume all value are converted into str before call addItems
         # widget.currentTextChanged.connect(observable.set) Old
         # widget.currentTextChanged.emit(widget.currentText)
         widget.currentTextChanged.connect(lambda: observable.set(widget.currentData()))
         widget.currentTextChanged.emit(widget.currentText())
+        return None
+
+    def binding_combobox_realvalue(
+        self,
+        widget: QComboBox,
+        observable: typing.Union[
+            ObservableProperty[typing.Any], ComputedObservableProperty[typing.Any]
+        ],
+    ) -> None:
+        warnings.warn("preview features")
+        widget.currentTextChanged.connect(lambda: observable.set(widget.currentData()))
+        widget.currentTextChanged.emit(widget.currentData())
         return None
 
     # QCheckBox
@@ -229,6 +254,7 @@ class BindableObject(QObject):
             ObservableBoolProperty, ComputedObservableBoolProperty
         ],
     ) -> None:
+        # TODO: handle each case along the checked state
         observable.valueChanged.connect(widget.setChecked)
         widget.stateChanged.connect(observable.set)
         observable.valueChanged.emit(observable.get())
