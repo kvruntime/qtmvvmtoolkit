@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import *
 from viewmodels.homevm import HomeViewModel
 
 from qtmvvmtoolkit.commands import RelayCommand
-from qtmvvmtoolkit.objects.bindable_object import BindableObject
+from qtmvvmtoolkit.objects import BindableObject
 from qtmvvmtoolkit.widgets.navbutton import NavButton
 
 
