@@ -8,6 +8,7 @@ from qtmvvmtoolkit.inputs import (
     RelayableProperty,
 )
 from qtmvvmtoolkit.objects import ObservableObject
+from qtmvvmtoolkit.inputs import ObservableProperty, ComputedObservableProperty
 
 
 class HomeViewModel(ObservableObject):

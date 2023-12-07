@@ -10,4 +10,8 @@ from ._oproperties import (
     ObservableProperty,
     base_types,
 )
+
+# from ._rproperties import RelayableProperty
 from ._rproperties import RelayableProperty
+
+# from ._oproperties import base_types, ObservableProperty, ComputedObservableProperty
