@@ -1,6 +1,13 @@
 # coding:utf-8
 
-from .computed_property import *
-from .observable_collection import *
-from .observable_property import *
-from .relayable_property import *
+# from ._ocollections import *
+# from ._oproperties import *
+# from ._rproperties import *
+
+from ._ocollections import ObservableCollection
+from ._oproperties import (
+    ComputedObservableProperty,
+    ObservableProperty,
+    base_types,
+)
+from ._rproperties import RelayableProperty

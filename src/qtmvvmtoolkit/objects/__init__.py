@@ -1,3 +1,3 @@
 # objects
-from .bindable_object import *
-from .observable_object import *
+from ._bobject import BindableObject
+from ._oobject import ObservableObject

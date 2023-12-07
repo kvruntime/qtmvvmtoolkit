@@ -1,12 +1,11 @@
 # coding:utf-8
 import typing
-from pathlib import Path
 import warnings
+from pathlib import Path
 
-from qtpy.QtWidgets import QToolButton, QPushButton, QWidget
 from qtpy.QtCore import QSize, Qt
-
 from qtpy.QtGui import QIcon
+from qtpy.QtWidgets import QPushButton, QToolButton, QWidget
 
 from qtmvvmtoolkit.navigation import NavigationManager
 

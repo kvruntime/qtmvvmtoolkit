@@ -1,6 +1,6 @@
 # coding:utf-8
-from pathlib import Path
 import typing
+from pathlib import Path
 
 # from PyQt6.QtCore import QObject
 from qtpy.QtCore import QObject, Signal

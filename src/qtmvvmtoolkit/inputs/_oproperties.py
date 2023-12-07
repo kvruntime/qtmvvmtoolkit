@@ -1,18 +1,15 @@
-import random
-import string
+# coding:utf-8
 import typing
 from pathlib import Path
-from typing import Generic, List, Type, TypeVar
+from typing import Generic, List, Sequence, TypeVar
 
-import pandas as pd
-from pydantic import BaseModel, Field
-from PyQt6.QtCore import QCoreApplication, pyqtBoundSignal
+from PyQt6.QtCore import pyqtBoundSignal
 from qtpy.QtCore import QObject, Signal
 
 T = TypeVar("T")
 
 
-class BaseTypes:
+class _BaseTypes:
     def __init__(self) -> None:
         self.types_list: List[type] = [
             object,
@@ -20,27 +17,19 @@ class BaseTypes:
             float,
             str,
             bool,
-            pd.DataFrame,
             Path,
         ]
         self.types: List[list[type]] = [[t] for t in self.types_list]
         return
 
-    def add_newtype(self, typ: type) -> None:
-        self.types_list.append(typ)
-        self.types.append([typ])
-        return
+    def register_new_types(self, types: Sequence[type]) -> None:
+        for typ in types:
+            self.types_list.append(typ)
+            self.types.append([typ])
+        return None
 
 
-class User(BaseModel):
-    name: str = Field(
-        default_factory=lambda: "".join(random.choices(list(string.ascii_letters), k=9))
-    )
-    age: int = 18
-
-
-base_types = BaseTypes()
-base_types.add_newtype(User)
+base_types = _BaseTypes()
 
 
 class IObservableProperty(QObject):
@@ -129,25 +118,3 @@ class ComputedObservableProperty(QObject, Generic[T]):
         self.valueChanged.connect(method)
         self.valueChanged.emit(self.get())
         return None
-
-
-def connection(arg: int) -> None:
-    print(arg)
-    return None
-
-
-def user_info(arg: User) -> None:
-    return print(arg)
-
-
-app = QCoreApplication([])
-one = ObservableProperty(19)
-user_data = ObservableProperty(User())
-user_role = ComputedObservableProperty(User(), [user_data], lambda: User())
-user_data.set(User(name="viktor"))
-one.binding(connection)
-user_data.binding(user_info)
-user_role.binding(user_info)
-
-
-app.exec()
