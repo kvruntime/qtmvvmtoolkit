@@ -1,26 +1,46 @@
 # coding:utf-8
 import typing
-from pathlib import Path
 
 # from PyQt6.QtCore import QObject
 from qtpy.QtCore import QObject, Signal
 from qtpy.QtWidgets import QComboBox
+from typing import TypeVar, Generic, Callable, Any
 
-T = typing.TypeVar("T", int, str, float, object, bool, object, Path)
+
+_T = TypeVar("_T")
 
 
-class ObservableCollection(QObject, typing.Generic[T]):
-    valueChanged = Signal(list, name="valueChanged")
+class ObservableSignals(QObject):
+    valueChanged = Signal(object)
 
-    def __init__(self, value: list[T]) -> None:
+
+class SigInst(Generic[_T]):
+    @staticmethod
+    def connect(slot: Callable[[_T], Any], type: type | None = ...) -> None:
+        ...
+
+    @staticmethod
+    def disconnect(slot: Callable[[_T], Any] = ...) -> None:
+        ...
+
+    @staticmethod
+    def emit(*args: _T) -> None:
+        ...
+
+
+class ObservableCollection(QObject, typing.Generic[_T]):
+    valueChanged: SigInst[_T]
+
+    def __init__(self, value: list[_T]) -> None:
         super().__init__()
         self.value = value
+        self.signals = ObservableSignals()
         return None
 
-    def get(self) -> list[T]:
+    def get(self) -> list[_T]:
         return self.value
 
-    def set(self, value: list[T]) -> None:
+    def set(self, value: list[_T]) -> None:
         self.value = value
         self.valueChanged.emit(value)
         return None
@@ -30,7 +50,7 @@ class ObservableCollection(QObject, typing.Generic[T]):
         self.valueChanged.emit(self.value)
         return None
 
-    def append(self, value: T) -> None:
+    def append(self, value: _T) -> None:
         self.value.append(value)
         self.valueChanged.emit(self.value)
         return None
@@ -39,7 +59,7 @@ class ObservableCollection(QObject, typing.Generic[T]):
         self.valueChanged.emit(self.value)
         return None
 
-    def extend(self, values: list[T]) -> None:
+    def extend(self, values: list[_T]) -> None:
         self.value.extend(values)
         self.valueChanged.emit(self.value)
         return None
@@ -55,6 +75,14 @@ class ObservableCollection(QObject, typing.Generic[T]):
         self.valueChanged.connect(widget.addItems)
         self.valueChanged.emit(self.value)
         return None
+
+    def __getattr__(self, name: str) -> SigInst:
+        attr = getattr(self.signals.__class__, name, None)
+        if isinstance(attr, Signal):
+            return getattr(self.signals, name)
+        raise AttributeError(
+            f"{self.__class__.name!r} object has no attribute {name!r}"
+        )
 
     # pop
     # __getitem__

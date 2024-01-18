@@ -8,7 +8,6 @@ from ._ocollections import ObservableCollection
 from ._oproperties import (
     ComputedObservableProperty,
     ObservableProperty,
-    base_types,
 )
 
 # from ._rproperties import RelayableProperty
