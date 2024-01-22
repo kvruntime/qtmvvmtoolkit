@@ -1,12 +1,14 @@
 # coding:utf-8
 import typing
+
+from qtpy.QtCore import QObject, Signal
+from qtpy.QtWidgets import QComboBox
+from typing import TypeVar, Generic, Callable, Any
+import typing
 from typing import Generic, TypeVar, Callable, Any
 
 from PyQt6.QtCore import pyqtBoundSignal
 from qtpy.QtCore import QObject, Signal
-
-
-T = TypeVar("T")
 
 
 _T = TypeVar("_T")
@@ -28,6 +30,24 @@ class SigInst(Generic[_T]):
 
 class ObservableSignals(QObject):
     valueChanged = Signal(object)  # emitted when the work is started
+
+
+# class ObservableSignals(QObject):
+#     valueChanged = Signal(object)
+
+
+# class SigInst(Generic[_T]):
+#     @staticmethod
+#     def connect(slot: Callable[[_T], Any], type: type | None = ...) -> None:
+#         ...
+
+#     @staticmethod
+#     def disconnect(slot: Callable[[_T], Any] = ...) -> None:
+#         ...
+
+#     @staticmethod
+#     def emit(*args: _T) -> None:
+#         ...
 
 
 # class IObservableProperty(QObject, Generic[_T]):
@@ -58,7 +78,6 @@ class ObservableSignals(QObject):
 
 
 class ObservableProperty(QObject, Generic[_T]):
-    # valueChanged = Signal(*base_types.types, name="valueChanged")
     valueChanged: SigInst[_T]
 
     def __init__(self, value: _T):
@@ -143,3 +162,93 @@ class ComputedObservableProperty(QObject, Generic[_T]):
         raise AttributeError(
             f"{self.__class__.name!r} object has no attribute {name!r}"
         )
+
+
+class ObservableCollection(QObject, typing.Generic[_T]):
+    valueChanged: SigInst[_T]
+
+    def __init__(self, value: list[_T]) -> None:
+        super().__init__()
+        self.value = value
+        self.signals = ObservableSignals()
+        return None
+
+    def get(self) -> list[_T]:
+        return self.value
+
+    def set(self, value: list[_T]) -> None:
+        self.value = value
+        self.valueChanged.emit(value)
+        return None
+
+    def clear(self) -> None:
+        self.value.clear()
+        self.valueChanged.emit(self.value)
+        return None
+
+    def append(self, value: _T) -> None:
+        self.value.append(value)
+        self.valueChanged.emit(self.value)
+        return None
+
+    def remove(self) -> None:
+        self.valueChanged.emit(self.value)
+        return None
+
+    def extend(self, values: list[_T]) -> None:
+        self.value.extend(values)
+        self.valueChanged.emit(self.value)
+        return None
+
+    def binding(self, method: typing.Callable[[typing.Any], None]) -> None:
+        """One way binding"""
+        self.valueChanged.connect(method)
+        self.valueChanged.emit(self.get())
+        return None
+
+    def bind_combobox(self, widget: QComboBox):
+        widget.clear()
+        self.valueChanged.connect(widget.addItems)
+        self.valueChanged.emit(self.value)
+        return None
+
+    def __getattr__(self, name: str) -> SigInst:
+        attr = getattr(self.signals.__class__, name, None)
+        if isinstance(attr, Signal):
+            return getattr(self.signals, name)
+        raise AttributeError(
+            f"{self.__class__.name!r} object has no attribute {name!r}"
+        )
+
+    # pop
+    # __getitem__
+    # index
+    # __len__
+    # __contains__
+    # __iter__
+
+
+import typing
+
+from PyQt6 import QtCore
+from PyQt6.QtCore import pyqtSignal
+
+
+class RelayableProperty(QtCore.QObject):
+    """Property that call a method when called.
+    this signal will be sent ; as response, a function will be called
+    """
+
+    relayed = pyqtSignal(name="relayed")
+
+    def __init__(self) -> None:
+        super().__init__()
+        return
+
+    def call(self) -> None:
+        self.relayed.emit()
+        return None
+
+    def binding(self, method: typing.Callable[[], None]) -> None:
+        self.relayed.connect(method)
+        return None
