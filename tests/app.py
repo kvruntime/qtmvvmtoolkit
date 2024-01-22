@@ -4,7 +4,7 @@ import typing
 import context
 
 context.__file__
-from PyQt6.QtWidgets import QMainWindow
+from qtpy.QtWidgets import QMainWindow
 
 from qtmvvmtoolkit.widgets.baseapp import BaseApp
 
