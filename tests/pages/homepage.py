@@ -1,11 +1,10 @@
 # coding:utf-8
-from PyQt6.QtGui import *
-from PyQt6.QtWidgets import *
+from qtpy.QtGui import *
+from qtpy.QtWidgets import *
 from viewmodels.homevm import HomeViewModel
 
 from qtmvvmtoolkit.commands import RelayCommand
 from qtmvvmtoolkit.objects import BindableObject
-from qtmvvmtoolkit.widgets.navbutton import NavButton
 
 
 class HomePage(QWidget, BindableObject):
@@ -19,18 +18,6 @@ class HomePage(QWidget, BindableObject):
 
     def initialize_component(self):
         lay = QHBoxLayout()
-        btn1 = NavButton("btn-1")
-        btn1.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ArrowBack))
-        lay.addWidget(btn1)
-        lay.addWidget(
-            NavButton(
-                "btn-1",
-                icon=self.style().standardIcon(
-                    QStyle.StandardPixmap.SP_DialogHelpButton
-                ),
-            )
-        )
-        lay.addWidget(NavButton("btn-3"))
         lay.addStretch()
 
         layout = QVBoxLayout(self)
