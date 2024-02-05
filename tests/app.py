@@ -1,9 +1,12 @@
 import sys
 import typing
-from PyQt6.QtWidgets import QApplication, QMainWindow
+
 import context
+
 context.__file__
-from qtmvvmtoolkit.widgets import BaseApp
+from qtpy.QtWidgets import QMainWindow
+
+from qtmvvmtoolkit.widgets.baseapp import BaseApp
 
 
 class App(BaseApp):
@@ -11,7 +14,7 @@ class App(BaseApp):
         super().__init__(sys.argv)
         self.appShell = appshell()
         self.appShell.show()
-        pass
+        return
 
     def launch(self):
         sys.exit(self.exec())
