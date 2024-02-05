@@ -2,22 +2,20 @@
 import typing
 from typing import Any, Callable
 
-from PyQt6.QtCore import pyqtSlot
+from qtpy.QtCore import pyqtSlot
 
 
-@pyqtSlot()
+@pyqtSlot(name="RelayCommand")
 class RelayCommand:
     """Relay command for button"""
 
     @typing.overload
-    def __init__(self, func: Callable[..., None]) -> None:
-        ...
+    def __init__(self, func: Callable[..., None]) -> None: ...
 
     @typing.overload
     def __init__(
         self, func: Callable[..., None], **kwargs: dict[typing.Any, typing.Any]
-    ) -> None:
-        ...
+    ) -> None: ...
 
     def __init__(
         self, func: Callable[..., None], **kwargs: dict[typing.Any, typing.Any]

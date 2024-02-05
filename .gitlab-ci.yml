@@ -1,0 +1,53 @@
+image: python:3.10.13-bullseye
+
+stages:
+  - test
+  - build_deploy
+  
+variables:
+  PACKAGE_NAME: $CI_PROJECT_NAME
+  PACKAGE_INDEX: https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/packages/pypi
+
+# run_tests:
+#   stage: test
+
+#   before_script:
+#     - echo "Installing dependencies..."
+#     - python -m pip install -U pip
+#     - pip install pipenv
+#     - pipenv requirements --exclude-markers --dev > requirements.txt
+#     - pip install -r requirements.txt
+
+#   script:
+#     - echo "Testing..."
+#     - pytest .
+
+#   after_script:
+#     - echo "Testing done !!!"
+
+
+run_build_deploy:
+  stage: build_deploy
+  # needs:
+  #   - run_tests
+
+  rules:
+    - if: $CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_TRIGGERED != "merge_request_event"
+      when: never
+    - when: always
+
+  before_script:
+    - echo "Installing dependencies..."
+    - python -m pip install -U pip
+    - pip install pipenv
+    - pipenv requirements --exclude-markers --dev > requirements.txt
+    - pip install -r requirements.txt
+
+  script:
+    - echo "Building $PACKAGE_NAME..."
+    - python -m build
+    - echo "Deploying $PACKAGE_NAME to $PACKAGE_INDEX"
+    - TWINE_USERNAME=__token__ TWINE_PASSWORD=$PACKAGE_DEPLOY_TOKEN twine upload --verbose  --repository-url $PACKAGE_INDEX dist/*
+    
+  after_script:
+    - echo "$PACKAGE_NAME deployed successfully"

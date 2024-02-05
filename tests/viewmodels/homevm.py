@@ -1,34 +1,32 @@
+from pathlib import Path
 import random
 import string
 
 from qtmvvmtoolkit.inputs import (
-    ComputedObservableBoolProperty,
-    ComputedObservableFloatProperty,
-    ObservableBoolProperty,
+    ComputedObservableProperty,
     ObservableCollection,
-    ObservableFloatProperty,
-    ObservableIntProperty,
-    ObservableStrProperty,
+    ObservableProperty,
     RelayableProperty,
 )
 from qtmvvmtoolkit.objects import ObservableObject
+from qtmvvmtoolkit.inputs import ObservableProperty, ComputedObservableProperty
 
 
 class HomeViewModel(ObservableObject):
     def __init__(self):
         super().__init__()
-        self.numbers = ObservableCollection(list(range(10)))
-        self.valid_numbers = ComputedObservableBoolProperty(
+        self.numbers = ObservableCollection[list[str]](list(range(10)))
+        self.valid_numbers = ComputedObservableProperty[bool](
             self.update_valid_numbers(), [self.numbers], self.update_valid_numbers
         )
 
-        self.username = ObservableStrProperty("named")
-        self.voltage = ObservableIntProperty(48)
-        self.capacity = ObservableFloatProperty(100)
-        self.energy = ComputedObservableFloatProperty(
+        self.username = ObservableProperty[str]("named")
+        self.voltage = ObservableProperty[int](48)
+        self.capacity = ObservableProperty[float](100)
+        self.energy = ComputedObservableProperty[float](
             self.compute_energy(), [self.voltage, self.capacity], self.compute_energy
         )
-        self.hide = ObservableBoolProperty(False)
+        self.hide = ObservableProperty[bool](False)
         self.infos = ObservableCollection[str](["user"])
 
         self.changed = RelayableProperty()

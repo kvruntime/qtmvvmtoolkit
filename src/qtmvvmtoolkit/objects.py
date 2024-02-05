@@ -1,7 +1,9 @@
-# -*- coding:utf-8 -*-
-from pathlib import Path
+# coding:utf-8
+
+from loguru import logger
 import typing
 import warnings
+from pathlib import Path
 
 from PyQt6.QtGui import QAction
 from qtpy.QtCore import QObject, QVariant
@@ -12,28 +14,35 @@ from qtpy.QtWidgets import (
     QLabel,
     QLineEdit,
     QPushButton,
+    QRadioButton,
     QSpinBox,
     QTextEdit,
     QToolButton,
     QWidget,
-    QRadioButton,
+    QApplication,
 )
 
 from qtmvvmtoolkit.commands import RelayCommand
 from qtmvvmtoolkit.inputs import (
-    ComputedObservableBoolProperty,
-    ComputedObservableFloatProperty,
-    ComputedObservableIntProperty,
-    ComputedObservableStrProperty,
-    ObservableBoolProperty,
+    ComputedObservableProperty,
     ObservableCollection,
-    ObservableFloatProperty,
-    ObservableIntProperty,
-    ObservableStrProperty,
+    ObservableProperty,
     RelayableProperty,
 )
-from qtmvvmtoolkit.inputs.computed_property import ComputedObservableProperty
-from qtmvvmtoolkit.inputs.observable_property import ObservableProperty
+
+
+class ObservableObject(QObject):
+    def __init__(self):
+        super().__init__()
+        self._logger = logger
+        return
+
+    def update_viewmodel(self) -> None:
+        return None
+
+    def get_current_opened_widget(self) -> QWidget:
+        current_widget = [w for w in QApplication.topLevelWidgets() if w.isVisible()][0]
+        return current_widget
 
 
 class BindableObject(QObject):
@@ -55,7 +64,7 @@ class BindableObject(QObject):
         self,
         widget: QWidget,
         observable: typing.Union[
-            ObservableBoolProperty, ComputedObservableBoolProperty
+            ObservableProperty[float], ComputedObservableProperty[float]
         ],
         prop: typing.Literal["visibility", "state"],
     ):
@@ -71,10 +80,10 @@ class BindableObject(QObject):
         self,
         widget: QLineEdit,
         observable: typing.Union[
-            ObservableIntProperty,
-            ObservableFloatProperty,
-            ComputedObservableIntProperty,
-            ComputedObservableFloatProperty,
+            ObservableProperty[int],
+            ObservableProperty[float],
+            ComputedObservableProperty[int],
+            ComputedObservableProperty[float],
         ],
     ) -> None:
         widget.setReadOnly(True)
@@ -86,8 +95,8 @@ class BindableObject(QObject):
         self,
         widget: QLineEdit,
         observable: typing.Union[
-            ObservableStrProperty,
-            ComputedObservableStrProperty,
+            ObservableProperty[str],
+            ComputedObservableProperty[str],
         ],
     ) -> None:
         observable.valueChanged.connect(widget.setText)
@@ -99,10 +108,10 @@ class BindableObject(QObject):
         self,
         widget: QLabel,
         observable: typing.Union[
-            ObservableIntProperty,
-            ObservableFloatProperty,
-            ComputedObservableIntProperty,
-            ComputedObservableFloatProperty,
+            ObservableProperty[int],
+            ObservableProperty[float],
+            ComputedObservableProperty[int],
+            ComputedObservableProperty[float],
         ],
         transformer: typing.Optional[
             typing.Callable[[typing.Union[int, float]], str]
@@ -123,7 +132,9 @@ class BindableObject(QObject):
     def binding_label_string(
         self,
         widget: QLabel,
-        observable: typing.Union[ObservableStrProperty, ComputedObservableStrProperty],
+        observable: typing.Union[
+            ObservableProperty[str], ComputedObservableProperty[str]
+        ],
     ) -> None:
         observable.valueChanged.connect(widget.setText)
         observable.valueChanged.emit(observable.get())
@@ -148,8 +159,8 @@ class BindableObject(QObject):
         self,
         widget: QSpinBox,
         observable: typing.Union[
-            ObservableIntProperty,
-            ComputedObservableIntProperty,
+            ObservableProperty[int],
+            ComputedObservableProperty[int],
         ],
         transformer: typing.Optional[typing.Literal["percent"]] = None,
     ) -> None:
@@ -170,8 +181,8 @@ class BindableObject(QObject):
         self,
         widget: QDoubleSpinBox,
         observable: typing.Union[
-            ObservableFloatProperty,
-            ComputedObservableFloatProperty,
+            ObservableProperty[float],
+            ComputedObservableProperty[float],
         ],
         transformer: typing.Optional[typing.Literal["percent"]] = None,
     ) -> None:
@@ -223,8 +234,8 @@ class BindableObject(QObject):
         self,
         widget: QComboBox,
         observable: typing.Union[
-            ObservableStrProperty,
-            ComputedObservableStrProperty,
+            ObservableProperty[str],
+            ComputedObservableProperty[str],
         ],
     ) -> None:
         # TODO: assume all value are converted into str before call addItems
@@ -251,7 +262,7 @@ class BindableObject(QObject):
         self,
         widget: QCheckBox,
         observable: typing.Union[
-            ObservableBoolProperty, ComputedObservableBoolProperty
+            ObservableProperty[bool], ComputedObservableProperty[bool]
         ],
     ) -> None:
         # TODO: handle each case along the checked state
