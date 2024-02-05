@@ -1,11 +1,9 @@
 # coding:utf-8
 import typing
+from typing import Callable, Generic, TypeVar
 
-from qtpy.QtCore import QObject, Signal, pyqtBoundSignal
+from qtpy.QtCore import QObject, Signal
 from qtpy.QtWidgets import QComboBox
-from typing import TypeVar, Generic, Callable
-import typing
-
 
 _T = TypeVar("_T")
 
@@ -50,7 +48,7 @@ class ObservableProperty(QObject, Generic[_T]):
         self.valueChanged.emit(self.get())
         return None
 
-    def rbinding(self, signal: pyqtBoundSignal) -> None:
+    def rbinding(self, signal: Signal) -> None:
         """Reverse binding method"""
         signal.connect(self.set)
         self.valueChanged.emit(self.get())
