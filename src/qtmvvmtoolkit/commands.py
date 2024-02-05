@@ -2,10 +2,10 @@
 import typing
 from typing import Any, Callable
 
-from qtpy.QtCore import pyqtSlot
+from qtpy.QtCore import Slot
 
 
-@pyqtSlot(name="RelayCommand")
+@Slot(name="RelayCommand")
 class RelayCommand:
     """Relay command for button"""
 
