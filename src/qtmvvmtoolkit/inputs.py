@@ -1,14 +1,10 @@
 # coding:utf-8
 import typing
 
-from qtpy.QtCore import QObject, Signal
+from qtpy.QtCore import QObject, Signal, pyqtBoundSignal
 from qtpy.QtWidgets import QComboBox
-from typing import TypeVar, Generic, Callable, Any
+from typing import TypeVar, Generic, Callable
 import typing
-from typing import Generic, TypeVar, Callable, Any
-
-from PyQt6.QtCore import pyqtBoundSignal
-from qtpy.QtCore import QObject, Signal
 
 
 _T = TypeVar("_T")
@@ -16,65 +12,17 @@ _T = TypeVar("_T")
 
 class SigInst(Generic[_T]):
     @staticmethod
-    def connect(slot: Callable[[_T], Any], type: type | None = ...) -> None:
-        ...
+    def connect(slot: Callable[[_T], typing.Any], type: type | None = ...) -> None: ...
 
     @staticmethod
-    def disconnect(slot: Callable[[_T], Any] = ...) -> None:
-        ...
+    def disconnect(slot: Callable[[_T], typing.Any] = ...) -> None: ...
 
     @staticmethod
-    def emit(*args: _T) -> None:
-        ...
+    def emit(*args: _T) -> None: ...
 
 
 class ObservableSignals(QObject):
     valueChanged = Signal(object)  # emitted when the work is started
-
-
-# class ObservableSignals(QObject):
-#     valueChanged = Signal(object)
-
-
-# class SigInst(Generic[_T]):
-#     @staticmethod
-#     def connect(slot: Callable[[_T], Any], type: type | None = ...) -> None:
-#         ...
-
-#     @staticmethod
-#     def disconnect(slot: Callable[[_T], Any] = ...) -> None:
-#         ...
-
-#     @staticmethod
-#     def emit(*args: _T) -> None:
-#         ...
-
-
-# class IObservableProperty(QObject, Generic[_T]):
-#     #  = Signal(name="valueChanged")
-#     valueChanged: SigInst[_T]
-
-#     def get(self) -> typing.Any:
-#         ...
-
-#     def set(self, value: typing.Any):
-#         ...
-
-#     def binding(self, method: typing.Callable[..., None]) -> None:
-#         """One way binding"""
-#         ...
-
-#     def rbinding(self, signal: pyqtBoundSignal) -> None:
-#         """Reverse binding method"""
-#         ...
-
-#     def getattr(self, name: str) -> SigInst:
-#         attr = getattr(self.signals.__class__, name, None)
-#         if isinstance(attr, Signal):
-#             return getattr(self.signals, name)
-#         raise AttributeError(
-#             f"{self.__class__.name!r} object has no attribute {name!r}"
-#         )
 
 
 class ObservableProperty(QObject, Generic[_T]):
@@ -228,18 +176,12 @@ class ObservableCollection(QObject, typing.Generic[_T]):
     # __iter__
 
 
-import typing
-
-from PyQt6 import QtCore
-from PyQt6.QtCore import pyqtSignal
-
-
-class RelayableProperty(QtCore.QObject):
+class RelayableProperty(QObject):
     """Property that call a method when called.
     this signal will be sent ; as response, a function will be called
     """
 
-    relayed = pyqtSignal(name="relayed")
+    relayed = Signal(name="relayed")
 
     def __init__(self) -> None:
         super().__init__()
