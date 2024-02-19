@@ -8,11 +8,11 @@ from qtmvvmtoolkit.inputs import (
     ObservableProperty,
     RelayableProperty,
 )
-from qtmvvmtoolkit.objects import ObservableObject
+# from qtmvvmtoolkit.objects import ObservableObject
 from qtmvvmtoolkit.inputs import ObservableProperty, ComputedObservableProperty
 
 
-class HomeViewModel(ObservableObject):
+class HomeViewModel():
     def __init__(self):
         super().__init__()
         self.numbers = ObservableCollection[list[str]](list(range(10)))
