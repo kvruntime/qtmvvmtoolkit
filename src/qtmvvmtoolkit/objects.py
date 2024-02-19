@@ -31,7 +31,7 @@ from qtmvvmtoolkit.inputs import (
 )
 
 
-class ObservableObject(QObject):
+class ObservableVM(QObject):
     def __init__(self):
         super().__init__()
         self._logger = logger
