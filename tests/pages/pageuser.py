@@ -1,12 +1,13 @@
 # coding:utf-8
 from qtpy.QtWidgets import QWidget, QLineEdit, QSpinBox
 from qtmvvmtoolkit.inputs import ObservableObject
+from qtmvvmtoolkit.objects import BindableObject
 
 from viewmodels.uservm import UserViewModel
 from pages.templates.PageUser_ui import Ui_PageUser
 
 
-class PageUser(QWidget, Ui_PageUser):
+class PageUser(QWidget, Ui_PageUser, BindableObject):
     def __init__(self) -> None:
         super().__init__(None)
         self.setupUi(self)

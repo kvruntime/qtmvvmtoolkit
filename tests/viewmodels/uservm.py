@@ -1,16 +1,9 @@
 # coding:utf-8
-import random
-import string
-from pathlib import Path
 
-# from qtmvvmtoolkit.objects import ObservableObject
-from qtmvvmtoolkit.inputs import (
-    ComputedObservableProperty,
-    ObservableCollection,
-    ObservableObject,
-    ObservableProperty,
-    RelayableProperty,
-)
+from messages.hellomessage import HelloMessage
+
+from qtmvvmtoolkit.inputs import ObservableObject
+from qtmvvmtoolkit.messenger import Messenger
 
 
 class User:
@@ -25,9 +18,14 @@ class UserViewModel:
         super().__init__()
         self.u = User("victor", 20)
         self.ou = ObservableObject(self.u)
+        Messenger.Default.use(HelloMessage, self.command_handle_message)
         return
 
     def command_display_user(self) -> None:
         print(self.ou.display_object())
         print(self.u.__dict__)
         return None
+
+    def command_handle_message(self, message: str) -> None:
+        print(f"handle message==>{message}")
+        return

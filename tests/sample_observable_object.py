@@ -2,7 +2,6 @@
 import typing
 
 from pydantic import BaseModel
-from loguru import logger
 from context import register_package
 from qtpy.QtCore import QCoreApplication
 
