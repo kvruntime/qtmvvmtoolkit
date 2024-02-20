@@ -4,7 +4,6 @@ from typing import Callable, Generic, TypeVar
 
 from qtpy.QtCore import QObject, Signal
 from qtpy.QtWidgets import QComboBox
-import typing
 
 # from pydantic import BaseModel
 # from PyQt6.QtCore import QCoreApplication, QObject, pyqtSignal
@@ -15,13 +14,16 @@ _T = TypeVar("_T")
 
 class SigInst(Generic[_T]):
     @staticmethod
-    def connect(slot: Callable[[_T], typing.Any], type: type | None = ...) -> None: ...
+    def connect(slot: Callable[[_T], typing.Any], type: type | None = ...) -> None:
+        ...
 
     @staticmethod
-    def disconnect(slot: Callable[[_T], typing.Any] = ...) -> None: ...
+    def disconnect(slot: Callable[[_T], typing.Any] = ...) -> None:
+        ...
 
     @staticmethod
-    def emit(*args: _T) -> None: ...
+    def emit(*args: _T) -> None:
+        ...
 
 
 class ObservableSignals(QObject):

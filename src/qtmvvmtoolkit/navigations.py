@@ -1,10 +1,17 @@
+# coding:utf-8
 import typing
-from qtpy.QtWidgets import *
+
 from qtpy.QtGui import QIcon
+from qtpy.QtWidgets import (
+    QPushButton,
+    QStackedWidget,
+    QTabWidget,
+    QToolButton,
+    QWidget,
+)
 
 
-class Shell:
-    _Current: typing.Any
+class Navigator:
 
     def __init__(self) -> None:
         self._outlet: typing.Union[QTabWidget, QStackedWidget]
@@ -15,11 +22,10 @@ class Shell:
     @property
     def Current(cls):
         try:
-            if Shell.__Default:
-                return Shell.__Default
+            return Navigator.__Default
         except AttributeError:
-            Shell.__Default = Shell()
-            return Shell.__Default
+            Navigator.__Default = Navigator()
+            return Navigator.__Default
 
     def add_outlet(
         self,
@@ -28,19 +34,19 @@ class Shell:
         self._outlet = outlet
         return
 
-    def register_route(self, route: str, widget: QWidget) -> None:
+    def add_route(self, route: str, widget: QWidget) -> None:
         if isinstance(widget, (QTabWidget)):
-            self._register_for_tab(route, widget)
+            self.__register_for_tab(route, widget)
         if isinstance(widget, (QStackedWidget)):
-            self._register_for_stacked(widget)
+            self.__register_for_stacked(widget)
         self._routes.update({route: widget})
         return
 
-    def _register_for_tab(self, route: str, widget: QWidget) -> None:
+    def __register_for_tab(self, route: str, widget: QWidget) -> None:
         self._outlet.addTab(widget, route)
         return None
 
-    def _register_for_stacked(self, widget: QWidget) -> None:
+    def __register_for_stacked(self, widget: QWidget) -> None:
         self._outlet.addWidget(widget)
         return None
 

@@ -1,10 +1,10 @@
 # coding:utf-8
 
-from loguru import logger
 import typing
 import warnings
 from pathlib import Path
 
+from loguru import logger
 from PyQt6.QtGui import QAction
 from qtpy.QtCore import QObject, QVariant
 from qtpy.QtWidgets import (
@@ -16,10 +16,8 @@ from qtpy.QtWidgets import (
     QPushButton,
     QRadioButton,
     QSpinBox,
-    QTextEdit,
     QToolButton,
     QWidget,
-    QApplication,
 )
 
 from qtmvvmtoolkit.commands import RelayCommand
@@ -31,18 +29,11 @@ from qtmvvmtoolkit.inputs import (
 )
 
 
-class ObservableVM(QObject):
+class ViewModel(QObject):
     def __init__(self):
         super().__init__()
         self._logger = logger
         return
-
-    def update_viewmodel(self) -> None:
-        return None
-
-    def get_current_opened_widget(self) -> QWidget:
-        current_widget = [w for w in QApplication.topLevelWidgets() if w.isVisible()][0]
-        return current_widget
 
 
 class BindableObject(QObject):
@@ -53,10 +44,24 @@ class BindableObject(QObject):
         super().__init__(parent)
         return
 
-    def initialize_component(self) -> None:
-        return None
+    def binding(
+        self,
+        widget: QWidget,
+        observable: ObservableProperty[typing.Any],
+        prop: str,
+    ) -> None:
+        # to know the type of observable
+        _type: type = typing.get_args(observable.__orig_class__)[0]
 
-    def initialize_binding(self) -> None:
+        match _type:
+            case _ if isinstance(_type, int):
+                print("int")
+            case _ if isinstance(_type, float):
+                print("float")
+            case _ if isinstance(_type, str):
+                print("str")
+            case _:
+                print("nothing")
         return None
 
     # Widgets
