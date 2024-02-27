@@ -1,6 +1,8 @@
-from pathlib import Path
+# coding:utf-8
 import random
 import string
+
+from messages.hellomessage import HelloMessage
 
 from qtmvvmtoolkit.inputs import (
     ComputedObservableProperty,
@@ -8,11 +10,10 @@ from qtmvvmtoolkit.inputs import (
     ObservableProperty,
     RelayableProperty,
 )
-from qtmvvmtoolkit.objects import ObservableObject
-from qtmvvmtoolkit.inputs import ObservableProperty, ComputedObservableProperty
+from qtmvvmtoolkit.messenger import Messenger
 
 
-class HomeViewModel(ObservableObject):
+class HomeViewModel:
     def __init__(self):
         super().__init__()
         self.numbers = ObservableCollection[list[str]](list(range(10)))
@@ -30,6 +31,8 @@ class HomeViewModel(ObservableObject):
         self.infos = ObservableCollection[str](["user"])
 
         self.changed = RelayableProperty()
+
+        Messenger.Default.register(HelloMessage)
         return
 
     def update_valid_numbers(self) -> bool:
@@ -45,6 +48,7 @@ class HomeViewModel(ObservableObject):
         return None
 
     def fill_numbers(self) -> None:
+        Messenger.Default.send(HelloMessage("new message sent"))
         new_name = "".join(random.choices(list(string.ascii_letters), k=10))
         self.infos.append(new_name)
         if len(self.numbers.get()) != 0:

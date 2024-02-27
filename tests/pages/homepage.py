@@ -7,7 +7,7 @@ from qtmvvmtoolkit.commands import RelayCommand
 from qtmvvmtoolkit.objects import BindableObject
 
 
-class HomePage(QWidget, BindableObject):
+class PageHome(QWidget, BindableObject):
     def __init__(self) -> None:
         super().__init__()
         self.vm = HomeViewModel()
