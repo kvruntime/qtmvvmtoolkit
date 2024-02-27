@@ -5,18 +5,25 @@ from typing import Callable, Generic, TypeVar
 from qtpy.QtCore import QObject, Signal
 from qtpy.QtWidgets import QComboBox
 
+# from pydantic import BaseModel
+# from PyQt6.QtCore import QCoreApplication, QObject, pyqtSignal
+from loguru import logger
+
 _T = TypeVar("_T")
 
 
 class SigInst(Generic[_T]):
     @staticmethod
-    def connect(slot: Callable[[_T], typing.Any], type: type | None = ...) -> None: ...
+    def connect(slot: Callable[[_T], typing.Any], type: type | None = ...) -> None:
+        ...
 
     @staticmethod
-    def disconnect(slot: Callable[[_T], typing.Any] = ...) -> None: ...
+    def disconnect(slot: Callable[[_T], typing.Any] = ...) -> None:
+        ...
 
     @staticmethod
-    def emit(*args: _T) -> None: ...
+    def emit(*args: _T) -> None:
+        ...
 
 
 class ObservableSignals(QObject):
@@ -192,3 +199,54 @@ class RelayableProperty(QObject):
     def binding(self, method: typing.Callable[[], None]) -> None:
         self.relayed.connect(method)
         return None
+
+
+class ObservableObject(QObject):
+    valueChanged = Signal(str, object)
+
+    def __init__(self, obj: object) -> None:
+        super().__init__(None)
+        self._observed = obj
+        return
+
+    def set(self, attr: str, value: typing.Any) -> None:
+        if hasattr(self._observed, attr):
+            if type(value) == type(getattr(self._observed, attr)):
+                self.valueChanged.emit(attr, value)
+                setattr(self._observed, attr, value)
+                return None
+            logger.warning(f"{attr} not found in {self._observed}")
+        return None
+
+    def get(self, attr: str) -> typing.Any:
+        if hasattr(self._observed, attr):
+            return getattr(self._observed, attr)
+        logger.warning(f"{attr} not found in {self._observed}")
+        return None
+
+    def has_attr(self, attr: str) -> bool:
+        return hasattr(self._observed, attr)
+
+    def rbinding(self, attr: str, value: typing.Any) -> None:
+        if hasattr(self._observed, attr):
+            if type(value) == type(getattr(self._observed, attr)):
+                # apply modification only when type is value
+                pass
+            self.valueChanged.emit(attr, value)
+            setattr(self._observed, attr, value)
+        return None
+
+    def display_object(self) -> None:
+        print(self._observed)
+        print(self._observed.__dict__)
+        return None
+
+    def export_dict(self) -> typing.Dict[str, typing.Any]:
+        return {
+            k: v for k, v in self._observed.__dict__.items() if not k.startswith("__")
+        }
+
+
+def handle_changes(name: str, value: typing.Any) -> None:
+    print(f"name:{name} & value:{value}")
+    return
