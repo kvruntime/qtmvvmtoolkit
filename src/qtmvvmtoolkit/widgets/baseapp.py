@@ -2,7 +2,7 @@ import sys
 import typing
 from pathlib import Path
 
-from PyQt6 import QtGui, QtWidgets
+from qtpy import QtGui, QtWidgets
 
 
 class BaseApp(QtWidgets.QApplication):

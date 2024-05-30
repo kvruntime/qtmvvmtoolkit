@@ -1,8 +1,8 @@
+# coding:utf-8
 import typing
 from typing import Any, Callable, Generic, TypeVar
 
-# from PyQt6.QtCore import *
-from qtpy.QtCore import QObject, Signal, QCoreApplication
+from qtpy.QtCore import QObject, Signal
 
 FuncT = typing.TypeVar("FuncT", bound=typing.Callable)
 
@@ -12,16 +12,13 @@ T = TypeVar("T")
 
 class SigInst(Generic[T]):
     @staticmethod
-    def connect(slot: Callable[[T], typing.Any], type: type | None = None) -> None:
-        ...
+    def connect(slot: Callable[[T], typing.Any], type: type | None = None) -> None: ...
 
     @staticmethod
-    def disconnect(slot: Callable[[T], typing.Any] = typing.Any) -> None:
-        ...
+    def disconnect(slot: Callable[[T], typing.Any] = typing.Any) -> None: ...
 
     @staticmethod
-    def emit(*args: T) -> None:
-        ...
+    def emit(*args: T) -> None: ...
 
 
 class WorkerBaseSignals(QObject):
@@ -90,12 +87,12 @@ class Messenger:
             return Messenger._Default
 
     def register(self, message: typing.Type[Message[Any]]) -> None:
-        if not message.__name__ in self._messages.keys():
+        if message.__name__ not in self._messages.keys():
             self._messages.update({message.__name__: []})
         return None
 
     def use(self, message: typing.Type[Message[Any]], func: Callable[[T], Any]):
-        if not message.__name__ in self._messages.keys():
+        if message.__name__ not in self._messages.keys():
             raise Exception(f"Message:{message.__name__}  doesn't exists")
 
         value: typing.List[typing.Any] = self._messages.get(message.__name__)
@@ -124,42 +121,3 @@ class Messenger:
                 message.send()
                 message.unregister(func)
         return None
-
-
-class IntMessage(Message[int]):
-    pass
-
-
-class StrMessage(Message[str]):
-    pass
-
-
-def operation(value: Any):
-    print(f"value->{value}")
-    return None
-
-
-def s_operation(value: Any):
-    print(f"()value()->{value}()")
-    return None
-
-
-def main() -> None:
-    app = QCoreApplication([])
-
-    Messenger.Default.register(IntMessage)
-    Messenger.Default.register(StrMessage)
-
-    Messenger.Default.use(IntMessage, operation)
-    Messenger.Default.use(IntMessage, s_operation)
-    Messenger.Default.use(StrMessage, operation)
-    Messenger.Default.use(StrMessage, s_operation)
-
-    Messenger.Default.send(IntMessage(6))
-    Messenger.Default.send(StrMessage("sdfdsfdsf===>"))
-    app.exec()
-    return None
-
-
-if __name__ == "__main__":
-    main()

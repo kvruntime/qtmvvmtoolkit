@@ -1,12 +1,11 @@
 # coding:utf-8
 
-from loguru import logger
 import typing
 import warnings
 from pathlib import Path
 
-from PyQt6.QtGui import QAction
 from qtpy.QtCore import QObject, QVariant
+from qtpy.QtGui import QAction
 from qtpy.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -16,33 +15,18 @@ from qtpy.QtWidgets import (
     QPushButton,
     QRadioButton,
     QSpinBox,
-    QTextEdit,
     QToolButton,
     QWidget,
-    QApplication,
 )
 
 from qtmvvmtoolkit.commands import RelayCommand
+from qtmvvmtoolkit.converters import IValueConverter
 from qtmvvmtoolkit.inputs import (
     ComputedObservableProperty,
     ObservableCollection,
     ObservableProperty,
     RelayableProperty,
 )
-
-
-class ObservableObject(QObject):
-    def __init__(self):
-        super().__init__()
-        self._logger = logger
-        return
-
-    def update_viewmodel(self) -> None:
-        return None
-
-    def get_current_opened_widget(self) -> QWidget:
-        current_widget = [w for w in QApplication.topLevelWidgets() if w.isVisible()][0]
-        return current_widget
 
 
 class BindableObject(QObject):
@@ -76,6 +60,34 @@ class BindableObject(QObject):
         return None
 
     # Input widgets
+    def binding_textedit(
+        self,
+        widget: QLineEdit,
+        observable: ObservableProperty[typing.Any],
+        bindings: typing.Literal["on-typing", "on-typed"] = "on-typed",
+        converter: typing.Optional[IValueConverter] = None,
+    ) -> None:
+        _type: typing.Type = observable.__orig_class__.__args__[0]
+
+        if _type == str:
+            if bindings == "on-typing":
+                widget.textChanged.connect(observable.set)
+
+            if bindings == "on-typed":
+                widget.editingFinished.connect(lambda: observable.set(widget.text()))
+
+            observable.valueChanged.connect(widget.setText)
+            observable.valueChanged.emit(observable.get())
+
+        if _type in [int, float]:
+            if bindings == "on-typing":
+                ...
+            if bindings == "on-typed":
+                ...
+            observable.valueChanged.connect(lambda value: widget.setText(str(value)))
+            observable.valueChanged.emit(observable.get())
+        return None
+
     def binding_textedit_number(
         self,
         widget: QLineEdit,

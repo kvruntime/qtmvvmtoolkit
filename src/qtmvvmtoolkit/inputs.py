@@ -1,14 +1,12 @@
 # coding:utf-8
 import typing
+from typing import Any, Callable, Generic, TypeVar
 
 from qtpy.QtCore import QObject, Signal
 from qtpy.QtWidgets import QComboBox
-from typing import TypeVar, Generic, Callable, Any
-import typing
-from typing import Generic, TypeVar, Callable, Any
 
-from PyQt6.QtCore import pyqtBoundSignal
-from qtpy.QtCore import QObject, Signal
+# from qtpy.QtCore import pyqtBoundSignal
+# from qtpy.QtCore import Signal
 
 
 _T = TypeVar("_T")
@@ -16,16 +14,13 @@ _T = TypeVar("_T")
 
 class SigInst(Generic[_T]):
     @staticmethod
-    def connect(slot: Callable[[_T], Any], type: type | None = ...) -> None:
-        ...
+    def connect(slot: Callable[[_T], Any], type: type | None = ...) -> None: ...
 
     @staticmethod
-    def disconnect(slot: Callable[[_T], Any] = ...) -> None:
-        ...
+    def disconnect(slot: Callable[[_T], Any] = ...) -> None: ...
 
     @staticmethod
-    def emit(*args: _T) -> None:
-        ...
+    def emit(*args: _T) -> None: ...
 
 
 class ObservableSignals(QObject):
@@ -64,7 +59,7 @@ class ObservableSignals(QObject):
 #         """One way binding"""
 #         ...
 
-#     def rbinding(self, signal: pyqtBoundSignal) -> None:
+#     def rbinding(self, signal: Signal) -> None:
 #         """Reverse binding method"""
 #         ...
 
@@ -87,6 +82,10 @@ class ObservableProperty(QObject, Generic[_T]):
         self.signals = ObservableSignals()
         return
 
+    # def cast_data(self) -> None:
+    #     self.valueChanged.emit(self.get())
+    #     return None
+
     def get(self) -> _T:
         return self.value
 
@@ -102,7 +101,7 @@ class ObservableProperty(QObject, Generic[_T]):
         self.valueChanged.emit(self.get())
         return None
 
-    def rbinding(self, signal: pyqtBoundSignal) -> None:
+    def rbinding(self, signal: Signal) -> None:
         """Reverse binding method"""
         signal.connect(self.set)
         self.valueChanged.emit(self.get())
@@ -123,7 +122,7 @@ class ComputedObservableProperty(QObject, Generic[_T]):
     def __init__(
         self,
         value: _T,
-        observable_props: typing.List[ObservableProperty[object]],
+        observable_props: typing.List[ObservableProperty[typing.Any]],
         update_function: typing.Callable[..., _T],
     ) -> None:
         super().__init__()
@@ -228,18 +227,12 @@ class ObservableCollection(QObject, typing.Generic[_T]):
     # __iter__
 
 
-import typing
-
-from PyQt6 import QtCore
-from PyQt6.QtCore import pyqtSignal
-
-
-class RelayableProperty(QtCore.QObject):
+class RelayableProperty(QObject):
     """Property that call a method when called.
     this signal will be sent ; as response, a function will be called
     """
 
-    relayed = pyqtSignal(name="relayed")
+    relayed = Signal(name="relayed")
 
     def __init__(self) -> None:
         super().__init__()

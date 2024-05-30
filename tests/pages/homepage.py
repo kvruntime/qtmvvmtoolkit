@@ -1,11 +1,10 @@
 # coding:utf-8
-from PyQt6.QtGui import *
-from PyQt6.QtWidgets import *
-from viewmodels.homevm import HomeViewModel
-
 from qtmvvmtoolkit.commands import RelayCommand
 from qtmvvmtoolkit.objects import BindableObject
-from qtmvvmtoolkit.widgets.navbutton import NavButton
+from qtpy.QtGui import *
+from qtpy.QtWidgets import *
+from viewmodels.homevm import HomeViewModel
+from qtmvvmtoolkit.converters import ToStrConverter
 
 
 class HomePage(QWidget, BindableObject):
@@ -19,18 +18,18 @@ class HomePage(QWidget, BindableObject):
 
     def initialize_component(self):
         lay = QHBoxLayout()
-        btn1 = NavButton("btn-1")
-        btn1.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ArrowBack))
-        lay.addWidget(btn1)
-        lay.addWidget(
-            NavButton(
-                "btn-1",
-                icon=self.style().standardIcon(
-                    QStyle.StandardPixmap.SP_DialogHelpButton
-                ),
-            )
-        )
-        lay.addWidget(NavButton("btn-3"))
+        # btn1 = NavButton("btn-1")
+        # btn1.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ArrowBack))
+        # lay.addWidget(btn1)
+        # lay.addWidget(
+        #     NavButton(
+        #         "btn-1",
+        #         icon=self.style().standardIcon(
+        #             QStyle.StandardPixmap.SP_DialogHelpButton
+        #         ),
+        #     )
+        # )
+        # lay.addWidget(NavButton("btn-3"))
         lay.addStretch()
 
         layout = QVBoxLayout(self)
@@ -73,11 +72,17 @@ class HomePage(QWidget, BindableObject):
 
     def initialize_binding(self) -> None:
         self.binding_label_string(self.labelName, self.vm.username)
-        self.binding_textedit_str(self.entryName, self.vm.username)
-        self.binding_widget(self.labelName, self.vm.hide, "visibility")
+        converter = ToStrConverter(str, str)
+        converter.convert(8)
+        self.binding_textedit(
+            self.entryName,
+            self.vm.username,
+            converter=converter,
+        )
+        # self.binding_widget(self.labelName, self.vm.hide, "visibility")
 
-        self.vm.username.rbinding(self.entryName.textChanged)
-        self.vm.hide.valueChanged.connect(self.entryName.setReadOnly)
+        # self.vm.username.rbinding(self.entryName.textChanged)
+        # self.vm.hide.valueChanged.connect(self.entryName.setReadOnly)
         self.binding_checkbox(self.checkNumbers, self.vm.valid_numbers)
         self.binding_spinbox(self.spinVoltage, self.vm.voltage)
         self.binding_label_number(

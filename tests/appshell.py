@@ -3,7 +3,7 @@ from pages.homepage import HomePage
 
 context.__file__
 
-from PyQt6.QtWidgets import QMainWindow
+from qtpy.QtWidgets import QMainWindow
 
 
 class AppShell(QMainWindow):
