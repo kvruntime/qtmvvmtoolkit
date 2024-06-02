@@ -5,19 +5,17 @@ from typing import Any, Callable
 from qtpy.QtCore import Slot
 
 
-@Slot(name="RelayCommand")
+@Slot()
 class RelayCommand:
     """Relay command for button"""
 
     @typing.overload
-    def __init__(self, func: Callable[..., None]) -> None:
-        ...
+    def __init__(self, func: Callable[..., None]) -> None: ...
 
     @typing.overload
     def __init__(
         self, func: Callable[..., None], **kwargs: dict[typing.Any, typing.Any]
-    ) -> None:
-        ...
+    ) -> None: ...
 
     def __init__(
         self, func: Callable[..., None], **kwargs: dict[typing.Any, typing.Any]

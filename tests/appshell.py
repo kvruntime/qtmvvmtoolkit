@@ -21,6 +21,9 @@ class Routes:
     User: str = "user"
 
 
+from qtpy.QtWidgets import QMainWindow
+
+
 class AppShell(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -30,6 +33,7 @@ class AppShell(QMainWindow):
         self.outlet.addTab(self.pageHome, "HomePage")
         self.pageUser = PageUser()
         self.outlet.addTab(self.pageUser, "UserPage")
+        self.outlet.tabBar().hide()
 
         self.buttonHome = QPushButton("Home")
         self.buttonUser = QPushButton("User")

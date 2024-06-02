@@ -3,7 +3,6 @@ import typing
 from typing import Callable, Generic, TypeVar, Any
 
 
-# from PyQt6.QtCore import *
 from qtpy.QtCore import QObject, Signal
 
 FuncT = typing.TypeVar("FuncT", bound=typing.Callable)
@@ -14,16 +13,13 @@ T = TypeVar("T")
 
 class SigInst(Generic[T]):
     @staticmethod
-    def connect(slot: Callable[[T], typing.Any], type: type | None = None) -> None:
-        ...
+    def connect(slot: Callable[[T], typing.Any], type: type | None = None) -> None: ...
 
     @staticmethod
-    def disconnect(slot: Callable[[T], typing.Any] = typing.Any) -> None:
-        ...
+    def disconnect(slot: Callable[[T], typing.Any] = typing.Any) -> None: ...
 
     @staticmethod
-    def emit(*args: T) -> None:
-        ...
+    def emit(*args: T) -> None: ...
 
 
 class WorkerBaseSignals(QObject):
