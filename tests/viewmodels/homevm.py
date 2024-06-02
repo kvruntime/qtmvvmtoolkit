@@ -7,6 +7,16 @@ from qtmvvmtoolkit.inputs import (
     ObservableProperty,
     RelayableProperty,
 )
+from pydantic import BaseModel
+
+
+class User(BaseModel):
+    name: str
+    email: str
+
+    @property
+    def infos(self):
+        return f"{self.name}->({self.email})"
 
 
 class HomeViewModel:
@@ -16,15 +26,21 @@ class HomeViewModel:
         self.valid_numbers = ComputedObservableProperty[bool](
             self.update_valid_numbers(), [self.numbers], self.update_valid_numbers
         )
+        self.state = ObservableProperty[bool](False)
 
         self.username = ObservableProperty[str]("named")
+        self.counter = ObservableProperty[int](0)
+        self.user = ObservableProperty[User](User(name="", email=""))
         self.voltage = ObservableProperty[int](48)
         self.capacity = ObservableProperty[float](100)
         self.energy = ComputedObservableProperty[float](
             self.compute_energy(), [self.voltage, self.capacity], self.compute_energy
         )
         self.hide = ObservableProperty[bool](False)
-        self.infos = ObservableCollection[str](["user"])
+        self.infos = ObservableCollection[str]([f"user-{index}" for index in range(10)])
+        self.user_infos = ObservableCollection[str](
+            [User(name=f"user-{index}", email=f"email-{index}") for index in range(10)]
+        )
 
         self.changed = RelayableProperty()
         return

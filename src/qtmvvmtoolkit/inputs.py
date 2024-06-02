@@ -82,9 +82,7 @@ class ObservableProperty(QObject, Generic[_T]):
         self.signals = ObservableSignals()
         return
 
-    # def cast_data(self) -> None:
-    #     self.valueChanged.emit(self.get())
-    #     return None
+
 
     def get(self) -> _T:
         return self.value

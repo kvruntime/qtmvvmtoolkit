@@ -1,10 +1,10 @@
 # coding:utf-8
 from qtmvvmtoolkit.commands import RelayCommand
+from qtmvvmtoolkit.converters import ToStrConverter
 from qtmvvmtoolkit.objects import BindableObject
 from qtpy.QtGui import *
 from qtpy.QtWidgets import *
 from viewmodels.homevm import HomeViewModel
-from qtmvvmtoolkit.converters import ToStrConverter
 
 
 class HomePage(QWidget, BindableObject):
@@ -18,18 +18,6 @@ class HomePage(QWidget, BindableObject):
 
     def initialize_component(self):
         lay = QHBoxLayout()
-        # btn1 = NavButton("btn-1")
-        # btn1.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ArrowBack))
-        # lay.addWidget(btn1)
-        # lay.addWidget(
-        #     NavButton(
-        #         "btn-1",
-        #         icon=self.style().standardIcon(
-        #             QStyle.StandardPixmap.SP_DialogHelpButton
-        #         ),
-        #     )
-        # )
-        # lay.addWidget(NavButton("btn-3"))
         lay.addStretch()
 
         layout = QVBoxLayout(self)
@@ -47,6 +35,8 @@ class HomePage(QWidget, BindableObject):
         self.checkNumbers = QCheckBox(self)
 
         self.cboxNames = QComboBox(self)
+        self.entry_cbox_value = QLineEdit()
+        self.entry_for_number = QLineEdit()
 
         self.buttonCall = QPushButton("Caller")
         # self.buttonCall.setProperty()
@@ -65,6 +55,8 @@ class HomePage(QWidget, BindableObject):
         layout.addWidget(self.buttonCall)
         layout.addWidget(QLabel("<h2>Observables Collections</h2>"))
         layout.addWidget(self.cboxNames)
+        layout.addWidget(self.entry_cbox_value)
+        layout.addWidget(self.entry_for_number)
         layout.addWidget(self.checkNumbers)
         layout.addStretch()
 
@@ -77,13 +69,8 @@ class HomePage(QWidget, BindableObject):
         self.binding_textedit(
             self.entryName,
             self.vm.username,
-            converter=converter,
         )
-        # self.binding_widget(self.labelName, self.vm.hide, "visibility")
-
-        # self.vm.username.rbinding(self.entryName.textChanged)
-        # self.vm.hide.valueChanged.connect(self.entryName.setReadOnly)
-        self.binding_checkbox(self.checkNumbers, self.vm.valid_numbers)
+        self.binding_checkbox(self.checkNumbers, self.vm.state)
         self.binding_spinbox(self.spinVoltage, self.vm.voltage)
         self.binding_label_number(
             self.labelVoltage, self.vm.voltage, lambda value: f"{value:5.2f} v"
@@ -94,9 +81,12 @@ class HomePage(QWidget, BindableObject):
 
         self.binding_command(self.buttonCall, RelayCommand(self.display_information))
 
-        self.binding_combobox_items(self.cboxNames, self.vm.infos, True)
-        # self.binding_combobox_value(self.cboxNames, self.vm.username)
-        self.binding_combobox_realvalue(self.cboxNames, self.vm.username)
+        self.binding_combobox(self.cboxNames, self.vm.user_infos, display_name="infos")
+        self.binding_combobox_selection(self.cboxNames, self.vm.user)
+        # self.vm.user.binding(lambda u: print(f"user=>{u}"))
+        self.vm.user.binding(lambda u: self.entry_cbox_value.setText(u.name))
+        self.binding_textedit(self.entry_for_number, self.vm.counter)
+        # self.binding_combobox_realvalue(self.cboxNames, self.vm.username)
         return None
 
     def display_information(self):
