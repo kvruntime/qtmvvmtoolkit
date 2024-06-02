@@ -1,4 +1,4 @@
-image: python:3.10.13-bullseye
+image: python:3.10-alpine
 
 stages:
   - build_deploy
@@ -11,24 +11,20 @@ variables:
 
 run_build_deploy:
   stage: build_deploy
-
   rules:
     - if: $CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_TRIGGERED != "merge_request_event"
       when: never
     - when: always
-
   before_script:
     - echo "Installing dependencies"
     - python -m pip install -U pip
     - pip install pipenv
     - pipenv requirements --exclude-markers --dev > requirements.txt
     - pip install -r requirements.txt
-
   script:
     - echo "Building $CI_PROJECT_NAME"
     - python -m build
     - echo "Deploying $CI_PROJECT_NAME to $PACKAGE_INDEX"
-    - TWINE_USERNAME=__token__ TWINE_PASSWORD=$PACKAGE_DEPLOY_TOKEN twine upload --verbose  --repository-url $PACKAGE_INDEX dist/*
-    
+    - twine upload dist/* -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD --repository-url $PACKAGE_INDEX
   after_script:
     - echo "$CI_PROJECT_NAME deployed successfully"
