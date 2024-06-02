@@ -33,6 +33,7 @@ class AppShell(QMainWindow):
         self.outlet.addTab(self.pageHome, "HomePage")
         self.pageUser = PageUser()
         self.outlet.addTab(self.pageUser, "UserPage")
+        self.outlet.tabBar().hide()
 
         self.buttonHome = QPushButton("Home")
         self.buttonUser = QPushButton("User")

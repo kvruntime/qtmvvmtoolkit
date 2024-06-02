@@ -1,20 +1,11 @@
 # coding:utf-8
-<<<<<<< HEAD
 from qtpy.QtGui import *
 from qtpy.QtWidgets import *
 from viewmodels.homevm import HomeViewModel
 
-=======
->>>>>>> feat
 from qtmvvmtoolkit.commands import RelayCommand
 from qtmvvmtoolkit.converters import ToStrConverter
 from qtmvvmtoolkit.objects import BindableObject
-<<<<<<< HEAD
-=======
-from qtpy.QtGui import *
-from qtpy.QtWidgets import *
-from viewmodels.homevm import HomeViewModel
->>>>>>> feat
 
 
 class PageHome(QWidget, BindableObject):

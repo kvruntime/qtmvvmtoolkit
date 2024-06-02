@@ -27,16 +27,6 @@ from qtmvvmtoolkit.inputs import (
 )
 
 
-<<<<<<< HEAD
-class ViewModel(QObject):
-    def __init__(self):
-        super().__init__()
-        self._logger = logger
-        return
-
-
-=======
->>>>>>> feat
 class BindableObject(QObject):
     def __init__(
         self,
@@ -134,6 +124,8 @@ class BindableObject(QObject):
             _value = _type(eval(widget.text()))
             observable.set(_value)
         except NameError:
+            widget.clear()
+        except SyntaxError:
             widget.clear()
         return None
 

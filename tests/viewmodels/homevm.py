@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 # coding:utf-8
-=======
->>>>>>> feat
 import random
 import string
 

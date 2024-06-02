@@ -3,10 +3,6 @@ import typing
 from typing import Callable, Generic, TypeVar, Any
 
 
-<<<<<<< HEAD
-# from PyQt6.QtCore import *
-=======
->>>>>>> feat
 from qtpy.QtCore import QObject, Signal
 
 FuncT = typing.TypeVar("FuncT", bound=typing.Callable)
