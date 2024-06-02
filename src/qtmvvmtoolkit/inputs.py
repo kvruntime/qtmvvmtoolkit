@@ -1,9 +1,12 @@
 # coding:utf-8
 import typing
-from typing import Callable, Generic, TypeVar
+from typing import Any, Callable, Generic, TypeVar
 
 from qtpy.QtCore import QObject, Signal
 from qtpy.QtWidgets import QComboBox
+
+# from qtpy.QtCore import pyqtBoundSignal
+# from qtpy.QtCore import Signal
 
 # from pydantic import BaseModel
 # from PyQt6.QtCore import QCoreApplication, QObject, pyqtSignal
@@ -14,20 +17,62 @@ _T = TypeVar("_T")
 
 class SigInst(Generic[_T]):
     @staticmethod
-    def connect(slot: Callable[[_T], typing.Any], type: type | None = ...) -> None:
-        ...
+    def connect(slot: Callable[[_T], Any], type: type | None = ...) -> None: ...
 
     @staticmethod
-    def disconnect(slot: Callable[[_T], typing.Any] = ...) -> None:
-        ...
+    def disconnect(slot: Callable[[_T], Any] = ...) -> None: ...
 
     @staticmethod
-    def emit(*args: _T) -> None:
-        ...
+    def emit(*args: _T) -> None: ...
 
 
 class ObservableSignals(QObject):
     valueChanged = Signal(object)  # emitted when the work is started
+
+
+# class ObservableSignals(QObject):
+#     valueChanged = Signal(object)
+
+
+# class SigInst(Generic[_T]):
+#     @staticmethod
+#     def connect(slot: Callable[[_T], Any], type: type | None = ...) -> None:
+#         ...
+
+#     @staticmethod
+#     def disconnect(slot: Callable[[_T], Any] = ...) -> None:
+#         ...
+
+#     @staticmethod
+#     def emit(*args: _T) -> None:
+#         ...
+
+
+# class IObservableProperty(QObject, Generic[_T]):
+#     #  = Signal(name="valueChanged")
+#     valueChanged: SigInst[_T]
+
+#     def get(self) -> typing.Any:
+#         ...
+
+#     def set(self, value: typing.Any):
+#         ...
+
+#     def binding(self, method: typing.Callable[..., None]) -> None:
+#         """One way binding"""
+#         ...
+
+#     def rbinding(self, signal: Signal) -> None:
+#         """Reverse binding method"""
+#         ...
+
+#     def getattr(self, name: str) -> SigInst:
+#         attr = getattr(self.signals.__class__, name, None)
+#         if isinstance(attr, Signal):
+#             return getattr(self.signals, name)
+#         raise AttributeError(
+#             f"{self.__class__.name!r} object has no attribute {name!r}"
+#         )
 
 
 class ObservableProperty(QObject, Generic[_T]):
@@ -76,7 +121,7 @@ class ComputedObservableProperty(QObject, Generic[_T]):
     def __init__(
         self,
         value: _T,
-        observable_props: typing.List[ObservableProperty[object]],
+        observable_props: typing.List[ObservableProperty[typing.Any]],
         update_function: typing.Callable[..., _T],
     ) -> None:
         super().__init__()

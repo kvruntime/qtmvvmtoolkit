@@ -20,7 +20,8 @@ classifiers = [
 dependencies = [
     "pyqtdarktheme",
     'importlib-metadata; python_version<"3.8"',
-    "pyqt6"
+    "pyqt6",
+    "qtpy"
 ]
 dynamic = ["version"]
 

@@ -3,8 +3,12 @@ import sys
 import typing
 from pathlib import Path
 
+<<<<<<< HEAD
 from qtpy.QtGui import QFontDatabase, QGuiApplication, QFont
 from qtpy.QtWidgets import QApplication, QMainWindow
+=======
+from qtpy import QtGui, QtWidgets
+>>>>>>> feat
 
 
 class BaseApp(QApplication):
