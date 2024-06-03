@@ -229,7 +229,7 @@ class ObservableCollection(QObject, typing.Generic[_T]):
     def __contains__(self, item: _T) -> bool:
         return item in self.value
 
-    def __iter__(self) -> typing.Iterator[int]:
+    def __iter__(self) -> typing.Iterator[_T]:
         return iter(self.value)
 
 
