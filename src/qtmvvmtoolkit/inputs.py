@@ -2,15 +2,13 @@
 import typing
 from typing import Any, Callable, Generic, TypeVar
 
-from qtpy.QtCore import QObject, Signal
-from qtpy.QtWidgets import QComboBox
-
 # from qtpy.QtCore import pyqtBoundSignal
 # from qtpy.QtCore import Signal
-
 # from pydantic import BaseModel
 # from PyQt6.QtCore import QCoreApplication, QObject, pyqtSignal
 from loguru import logger
+from qtpy.QtCore import QObject, Signal
+from qtpy.QtWidgets import QComboBox
 
 _T = TypeVar("_T")
 
@@ -198,6 +196,10 @@ class ObservableCollection(QObject, typing.Generic[_T]):
         self.valueChanged.emit(self.value)
         return None
 
+    def pop(self, index: int) -> _T:
+        _poped = self.value.pop(index)
+        return _poped
+
     def binding(self, method: typing.Callable[[typing.Any], None]) -> None:
         """One way binding"""
         self.valueChanged.connect(method)
@@ -218,12 +220,17 @@ class ObservableCollection(QObject, typing.Generic[_T]):
             f"{self.__class__.name!r} object has no attribute {name!r}"
         )
 
-    # pop
-    # __getitem__
-    # index
-    # __len__
-    # __contains__
-    # __iter__
+    def __getitem__(self, index: int) -> _T:
+        return self.value[index]
+
+    def __len__(self) -> int:
+        return len(self.value)
+
+    def __contains__(self, item: _T) -> bool:
+        return item in self.value
+
+    def __iter__(self) -> typing.Iterator[int]:
+        return iter(self.value)
 
 
 class RelayableProperty(QObject):

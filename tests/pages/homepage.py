@@ -15,6 +15,12 @@ class PageHome(QWidget, BindableObject):
 
         self.initialize_component()
         self.initialize_binding()
+
+        print("<===>")
+        print(6 in self.vm.numbers)
+        print(self.vm.numbers.pop(3))
+        for number in self.vm.numbers:
+            print(number)
         return
 
     def initialize_component(self):

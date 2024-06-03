@@ -28,7 +28,7 @@ class User(BaseModel):
 class HomeViewModel:
     def __init__(self):
         super().__init__()
-        self.numbers = ObservableCollection[list[str]](list(range(10)))
+        self.numbers = ObservableCollection[int](list(range(10)))
         self.valid_numbers = ComputedObservableProperty[bool](
             self.update_valid_numbers(), [self.numbers], self.update_valid_numbers
         )

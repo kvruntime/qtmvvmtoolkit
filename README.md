@@ -13,5 +13,5 @@ pyhton -m build
 ## How Deploy
 
 ```
- twine upload dist/* -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD --repository-url https://gitlab.com/api/v4/projects/45425930/packages/pypi
+ twine upload dist/* -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD --repository-url https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/packages/pypi
 ```
