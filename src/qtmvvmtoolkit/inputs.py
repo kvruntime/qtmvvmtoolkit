@@ -302,3 +302,34 @@ class ObservableObject(QObject):
 def handle_changes(name: str, value: typing.Any) -> None:
     print(f"name:{name} & value:{value}")
     return
+
+
+class ObservableObjectDev(typing.Generic[_T]):
+    def __init__(self, obj: _T) -> None:
+        super().__init__()
+        self.obj = obj
+
+        self.obj_type = type(self.obj)
+        self.__initialize_observables()
+        return
+
+    def __initialize_observables(self) -> None:
+        attributes = [
+            attr
+            for attr in self.obj.__dir__()
+            if not attr.startswith("__")
+            if not callable(getattr(self.obj, attr))
+        ]
+        for attr_name in attributes:
+            attr_type = type(getattr(self, attr_name, None))
+            setattr(self, attr_name, ObservableProperty[attr_type](attr_type()))
+        return None
+
+    def set(self, value: typing.Any) -> None:
+        return None
+
+    def get(self) -> None:
+        return None
+
+    def binding_port(self) -> type[_T]:
+        return self.obj_type
