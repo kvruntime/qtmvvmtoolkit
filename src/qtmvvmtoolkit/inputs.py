@@ -15,13 +15,16 @@ _T = TypeVar("_T")
 
 class SigInst(Generic[_T]):
     @staticmethod
-    def connect(slot: Callable[[_T], Any], type: type | None = ...) -> None: ...
+    def connect(slot: Callable[[_T], Any], type: type | None = ...) -> None:
+        ...
 
     @staticmethod
-    def disconnect(slot: Callable[[_T], Any] = ...) -> None: ...
+    def disconnect(slot: Callable[[_T], Any] = ...) -> None:
+        ...
 
     @staticmethod
-    def emit(*args: _T) -> None: ...
+    def emit(*args: _T) -> None:
+        ...
 
 
 class ObservableSignals(QObject):

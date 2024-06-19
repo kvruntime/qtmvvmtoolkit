@@ -21,13 +21,18 @@ class IValueConverter(typing.Protocol):
     source_type: type
     target_type: type
 
-    def __init__(self, source_type: type, target_type: type) -> None: ...
+    def __init__(self, source_type: type, target_type: type) -> None:
+        ...
+
     def convert(
         self, value: object, parameter: typing.Optional[object] = None
-    ) -> object: ...
+    ) -> object:
+        ...
+
     def convert_back(
         self, value: object, parameter: typing.Optional[object] = None
-    ) -> object: ...
+    ) -> object:
+        ...
 
 
 class ToStrConverter(IValueConverter):
