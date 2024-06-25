@@ -3,7 +3,7 @@
 import typing
 import warnings
 
-from qtpy.QtCore import QObject, QVariant, Qt
+from qtpy.QtCore import QObject, Qt, QVariant
 from qtpy.QtGui import QAction
 from qtpy.QtWidgets import (
     QCheckBox,
@@ -273,11 +273,11 @@ class BindableObject(QObject):
             lambda values: self._fill_combobox_items(widget, values)
         )
         if select_default:
-            observable.valueChanged.emit(observable.value)
+            observable.valueChanged.emit(observable.collection)
             # widget.setCurrentIndex(0)
         else:
             widget.setCurrentIndex(-1)
-            observable.valueChanged.emit(observable.value)
+            observable.valueChanged.emit(observable.collection)
         return None
 
     def _fill_combobox_items(
@@ -351,10 +351,10 @@ class BindableObject(QObject):
             lambda values: self._fill_combobox_items(widget, values, display_name)
         )
         if selection_default:
-            observable.valueChanged.emit(observable.value)
+            observable.valueChanged.emit(observable.collection)
             # widget.setCurrentIndex(0)
         else:
-            observable.valueChanged.emit(observable.value)
+            observable.valueChanged.emit(observable.collection)
             widget.setCurrentIndex(-1)
         return None
 

@@ -166,41 +166,44 @@ class ComputedObservableProperty(QObject, Generic[_T]):
 class ObservableCollection(QObject, typing.Generic[_T]):
     valueChanged: SigInst[_T]
 
-    def __init__(self, value: list[_T]) -> None:
+    def __init__(self, collection: list[_T]) -> None:
         super().__init__()
-        self.value = value
+        self.collection = collection
         self.signals = ObservableSignals()
         return None
 
     def get(self) -> list[_T]:
-        return self.value
+        return self.collection
 
-    def set(self, value: list[_T]) -> None:
-        self.value = value
-        self.valueChanged.emit(value)
+    def set(self, collection: list[_T]) -> None:
+        self.collection = collection
+        self.valueChanged.emit(collection)
         return None
 
     def clear(self) -> None:
-        self.value.clear()
-        self.valueChanged.emit(self.value)
+        self.collection.clear()
+        self.valueChanged.emit(self.collection)
         return None
 
     def append(self, value: _T) -> None:
-        self.value.append(value)
-        self.valueChanged.emit(self.value)
+        self.collection.append(value)
+        self.valueChanged.emit(self.collection)
         return None
 
-    def remove(self) -> None:
-        self.valueChanged.emit(self.value)
+    def remove(self, data: _T) -> None:
+        self.collection.remove(data)
+        self.valueChanged.emit(self.collection)
         return None
 
-    def extend(self, values: list[_T]) -> None:
-        self.value.extend(values)
-        self.valueChanged.emit(self.value)
+    def extend(self, collection: list[_T]) -> None:
+        self.collection.extend(collection)
+        self.valueChanged.emit(self.collection)
         return None
 
     def pop(self, index: int) -> _T:
-        _poped = self.value.pop(index)
+        _poped = self.collection.pop(index)
+        self.valueChanged.emit(self.collection)
+
         return _poped
 
     def binding(self, method: typing.Callable[[typing.Any], None]) -> None:
@@ -212,7 +215,7 @@ class ObservableCollection(QObject, typing.Generic[_T]):
     def bind_combobox(self, widget: QComboBox):
         widget.clear()
         self.valueChanged.connect(widget.addItems)
-        self.valueChanged.emit(self.value)
+        self.valueChanged.emit(self.collection)
         return None
 
     def __getattr__(self, name: str) -> SigInst:
@@ -224,16 +227,16 @@ class ObservableCollection(QObject, typing.Generic[_T]):
         )
 
     def __getitem__(self, index: int) -> _T:
-        return self.value[index]
+        return self.collection[index]
 
     def __len__(self) -> int:
-        return len(self.value)
+        return len(self.collection)
 
     def __contains__(self, item: _T) -> bool:
-        return item in self.value
+        return item in self.collection
 
     def __iter__(self) -> typing.Iterator[_T]:
-        return iter(self.value)
+        return iter(self.collection)
 
 
 class RelayableProperty(QObject):
