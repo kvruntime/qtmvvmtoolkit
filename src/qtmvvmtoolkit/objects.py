@@ -3,7 +3,7 @@
 import typing
 import warnings
 
-from qtpy.QtCore import QObject, QVariant, Qt
+from qtpy.QtCore import QObject, Qt, QVariant
 from qtpy.QtGui import QAction
 from qtpy.QtWidgets import (
     QCheckBox,
@@ -273,11 +273,11 @@ class BindableObject(QObject):
             lambda values: self._fill_combobox_items(widget, values)
         )
         if select_default:
-            observable.valueChanged.emit(observable.value)
+            observable.valueChanged.emit(observable.collection)
             # widget.setCurrentIndex(0)
         else:
             widget.setCurrentIndex(-1)
-            observable.valueChanged.emit(observable.value)
+            observable.valueChanged.emit(observable.collection)
         return None
 
     def _fill_combobox_items(
@@ -303,21 +303,21 @@ class BindableObject(QObject):
             #     widget.addItem(str(value), userData=QVariant(value))
         return None
 
-    # def binding_combobox_value(
-    #     self,
-    #     widget: QComboBox,
-    #     observable: typing.Union[
-    #         ObservableProperty[str],
-    #         ComputedObservableProperty[str],
-    #     ],
-    # ) -> None:
-    #     warnings.warn("WARN: deprecated function")
-    #     # TODO: assume all value are converted into str before call addItems
-    #     # widget.currentTextChanged.connect(observable.set) Old
-    #     # widget.currentTextChanged.emit(widget.currentText)
-    #     widget.currentTextChanged.connect(lambda: observable.set(widget.currentData()))
-    #     widget.currentTextChanged.emit(widget.currentText())
-    #     return None
+    def binding_combobox_value(
+        self,
+        widget: QComboBox,
+        observable: typing.Union[
+            ObservableProperty[str],
+            ComputedObservableProperty[str],
+        ],
+    ) -> None:
+        warnings.warn("WARN: deprecated function")
+        # TODO: assume all value are converted into str before call addItems
+        # widget.currentTextChanged.connect(observable.set) Old
+        # widget.currentTextChanged.emit(widget.currentText)
+        widget.currentTextChanged.connect(lambda: observable.set(widget.currentData()))
+        widget.currentTextChanged.emit(widget.currentText())
+        return None
 
     def binding_combobox_selection(
         self,
@@ -351,11 +351,11 @@ class BindableObject(QObject):
             lambda values: self._fill_combobox_items(widget, values, display_name)
         )
         if selection_default:
-            observable.valueChanged.emit(observable.value)
+            observable.valueChanged.emit(observable.collection)
             # widget.setCurrentIndex(0)
         else:
+            observable.valueChanged.emit(observable.collection)
             widget.setCurrentIndex(-1)
-            observable.valueChanged.emit(observable.value)
         return None
 
     # QCheckBox

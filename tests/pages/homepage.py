@@ -88,10 +88,12 @@ class PageHome(QWidget, BindableObject):
 
         self.binding_command(self.buttonCall, RelayCommand(self.display_information))
 
-        self.binding_combobox(self.cboxNames, self.vm.user_infos, display_name="infos")
+        self.binding_combobox(
+            self.cboxNames, self.vm.user_infos, False, display_name="infos"
+        )
         self.binding_combobox_selection(self.cboxNames, self.vm.user)
         # self.vm.user.binding(lambda u: print(f"user=>{u}"))
-        self.vm.user.binding(lambda u: self.entry_cbox_value.setText(u.name))
+        # self.vm.user.binding(lambda u: self.entry_cbox_value.setText(u.name))
         self.binding_textedit(self.entry_for_number, self.vm.counter)
         # self.binding_combobox_realvalue(self.cboxNames, self.vm.username)
         return None

@@ -30,7 +30,7 @@ app = QCoreApplication([])
 
 user_val = User2(name="jean", age=20)
 u = ObservableObject(user_val)
-u.valueChanged.connect(handle_changes)
+
 
 u.set("name", "victor")
 u.set("age", 78)
