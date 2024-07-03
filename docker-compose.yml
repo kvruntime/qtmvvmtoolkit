@@ -1,0 +1,13 @@
+services:
+  gui-app:
+    image: gui-app-image
+    build:
+      context: ./.devcontainer
+      dockerfile: Dockerfile
+      target: dev
+    command: sleep infinity
+    network_mode: host
+    environment:
+      - DISPLAY=host.docker.internal:0
+    volumes:
+      - .:/workspaces/qtmvvmtoolkit:rw
