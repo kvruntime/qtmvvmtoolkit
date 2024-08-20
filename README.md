@@ -1,8 +1,8 @@
-# qtmvvmtoolkit
+# QTMVVMTOOLKIT
 
 ## Description
 
-Build MVVM software pattern for PySide6
+Build MVVM software pattern for PySide6/PyQt6
 
 ## How build
 
