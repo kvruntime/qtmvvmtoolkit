@@ -1,9 +1,8 @@
 # coding:utf-8
 
 import typing
-import warnings
 
-from qtpy.QtCore import QObject, Qt, QVariant
+from qtpy.QtCore import QObject
 from qtpy.QtGui import QAction
 from qtpy.QtWidgets import (
     QCheckBox,

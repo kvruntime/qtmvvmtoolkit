@@ -21,8 +21,6 @@ class Routes:
     User: str = "user"
 
 
-
-
 class AppShell(QMainWindow):
     def __init__(self):
         super().__init__()
