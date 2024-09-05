@@ -1,15 +1,14 @@
 # coding:utf-8
 import typing
 from typing import Any, Callable, Generic, TypeVar
+import warnings
 
-# from qtpy.QtCore import pyqtBoundSignal
-# from qtpy.QtCore import Signal
-# from pydantic import BaseModel
-# from PyQt6.QtCore import QCoreApplication, QObject, pyqtSignal
+
 from qtpy.QtCore import QObject, Signal
 from qtpy.QtWidgets import QComboBox
 
 _T = TypeVar("_T")
+T = TypeVar("T")
 
 
 class SigInst(Generic[_T]):
@@ -25,51 +24,6 @@ class SigInst(Generic[_T]):
 
 class ObservableSignals(QObject):
     valueChanged = Signal(object)  # emitted when the work is started
-
-
-# class ObservableSignals(QObject):
-#     valueChanged = Signal(object)
-
-
-# class SigInst(Generic[_T]):
-#     @staticmethod
-#     def connect(slot: Callable[[_T], Any], type: type | None = ...) -> None:
-#         ...
-
-#     @staticmethod
-#     def disconnect(slot: Callable[[_T], Any] = ...) -> None:
-#         ...
-
-#     @staticmethod
-#     def emit(*args: _T) -> None:
-#         ...
-
-
-# class IObservableProperty(QObject, Generic[_T]):
-#     #  = Signal(name="valueChanged")
-#     valueChanged: SigInst[_T]
-
-#     def get(self) -> typing.Any:
-#         ...
-
-#     def set(self, value: typing.Any):
-#         ...
-
-#     def binding(self, method: typing.Callable[..., None]) -> None:
-#         """One way binding"""
-#         ...
-
-#     def rbinding(self, signal: Signal) -> None:
-#         """Reverse binding method"""
-#         ...
-
-#     def getattr(self, name: str) -> SigInst:
-#         attr = getattr(self.signals.__class__, name, None)
-#         if isinstance(attr, Signal):
-#             return getattr(self.signals, name)
-#         raise AttributeError(
-#             f"{self.__class__.name!r} object has no attribute {name!r}"
-#         )
 
 
 class ObservableProperty(QObject, Generic[_T]):
@@ -118,7 +72,7 @@ class ComputedObservableProperty(QObject, Generic[_T]):
     def __init__(
         self,
         value: _T,
-        observable_props: typing.List[ObservableProperty[typing.Any]],
+        observable_props: typing.List[ObservableProperty[_T]],
         update_function: typing.Callable[..., _T],
     ) -> None:
         super().__init__()
@@ -235,24 +189,25 @@ class ObservableCollection(QObject, typing.Generic[_T]):
         return iter(self.collection)
 
 
-class RelayableProperty(QObject):
-    """Property that call a method when called.
-    this signal will be sent ; as response, a function will be called
-    """
+def observable_object(target_class: typing.Type[object]):
+    # def wrapper(*args: typing.List[typing.Any], **kwargs: typing.Dict[str, typing.Any]):
+    warnings.warn(
+        "WARN: this is preview feature & should in instable & change in future"
+    )
 
-    relayed = Signal(name="relayed")
+    # create custom function to retrieve basic attribute
+    def get_attribute(self) -> typing.Dict[str, typing.Any]:
+        return {k: v.get() for k, v in self.__dict__.items()}
 
-    def __init__(self) -> None:
-        super().__init__()
-        return
+    target_class.get_attribute = get_attribute
 
-    def call(self) -> None:
-        self.relayed.emit()
-        return None
+    def wrapper(*args, **kwargs):
+        instance = target_class(*args, **kwargs)
+        for k, v in instance.__dict__.items():
+            setattr(instance, k, ObservableProperty[type(v)](v))
+        return instance
 
-    def binding(self, method: typing.Callable[[], None]) -> None:
-        self.relayed.connect(method)
-        return None
+    return wrapper
 
 
 # class ObservableObject(QObject):
@@ -337,22 +292,65 @@ class RelayableProperty(QObject):
 #         return self.obj_type
 
 
-def observable_object(target_class: typing.Type[object]):
-    # def wrapper(*args: typing.List[typing.Any], **kwargs: typing.Dict[str, typing.Any]):
+# class ObservableSignals(QObject):
+#     valueChanged = Signal(object)
 
-    # create custom function to retrieve basic attribute
-    def get_attribute(self) -> typing.Dict[str, typing.Any]:
-        # for k, v in self.__dict__.items():
-        #     print(k, "->", v.get())
-        return {k: v.get() for k, v in self.__dict__.items()}
-        ...
 
-    target_class.get_attribute = get_attribute
+# class SigInst(Generic[_T]):
+#     @staticmethod
+#     def connect(slot: Callable[[_T], Any], type: type | None = ...) -> None:
+#         ...
 
-    def wrapper(*args, **kwargs):
-        instance = target_class(*args, **kwargs)
-        for k, v in instance.__dict__.items():
-            setattr(instance, k, ObservableProperty[type(v)](v))
-        return instance
+#     @staticmethod
+#     def disconnect(slot: Callable[[_T], Any] = ...) -> None:
+#         ...
 
-    return wrapper
+#     @staticmethod
+#     def emit(*args: _T) -> None:
+#         ...
+
+
+# class IObservableProperty(QObject, Generic[_T]):
+#     #  = Signal(name="valueChanged")
+#     valueChanged: SigInst[_T]
+
+#     def get(self) -> typing.Any:
+#         ...
+
+#     def set(self, value: typing.Any):
+#         ...
+
+#     def binding(self, method: typing.Callable[..., None]) -> None:
+#         """One way binding"""
+#         ...
+
+#     def rbinding(self, signal: Signal) -> None:
+#         """Reverse binding method"""
+#         ...
+
+#     def getattr(self, name: str) -> SigInst:
+#         attr = getattr(self.signals.__class__, name, None)
+#         if isinstance(attr, Signal):
+#             return getattr(self.signals, name)
+#         raise AttributeError(
+#             f"{self.__class__.name!r} object has no attribute {name!r}"
+#
+
+# class RelayableProperty(QObject):
+#     """Property that call a method when called.
+#     this signal will be sent ; as response, a function will be called
+#     """
+
+#     relayed = Signal(name="relayed")
+
+#     def __init__(self) -> None:
+#         super().__init__()
+#         return
+
+#     def call(self) -> None:
+#         self.relayed.emit()
+#         return None
+
+#     def binding(self, method: typing.Callable[[], None]) -> None:
+#         self.relayed.connect(method)
+#         return None

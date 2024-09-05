@@ -2,13 +2,12 @@
 import random
 import string
 
-from messages.hellomessage import HelloMessage
+from messages.hellomessage import HelloMessage, StateChangedMessage
 
 from qtmvvmtoolkit.inputs import (
     ComputedObservableProperty,
     ObservableCollection,
     ObservableProperty,
-    RelayableProperty,
 )
 from qtmvvmtoolkit.messenger import Messenger
 
@@ -48,9 +47,10 @@ class HomeViewModel:
             [User(name=f"user-{index}", email=f"email-{index}") for index in range(10)]
         )
 
-        self.changed = RelayableProperty()
+        # self.changed = RelayableProperty()
 
         Messenger.Default.register(HelloMessage)
+        Messenger.Default.register(StateChangedMessage)
         return
 
     def update_valid_numbers(self) -> bool:
@@ -61,7 +61,9 @@ class HomeViewModel:
         return self.voltage.get() * self.capacity.get()
 
     def command_call_relay(self):
-        self.changed.call()
+        # self.changed.call()
+        Messenger.Default.send(StateChangedMessage(True))
+
         # self.hide.set(not self.hide.get())
         return None
 

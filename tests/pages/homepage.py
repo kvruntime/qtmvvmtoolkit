@@ -37,7 +37,8 @@ class PageHome(QWidget, BindableObject):
         self.spinVoltage = QSpinBox()
         self.spinEnergy = QDoubleSpinBox()
         self.spinEnergy.setReadOnly(True)
-        self.spinEnergy.setMaximum(99990)
+        self.spinEnergy.setMaximum(9999999)
+        self.spinVoltage.setMaximum(9999999)
         self.checkNumbers = QCheckBox(self)
 
         self.cboxNames = QComboBox(self)
@@ -69,26 +70,25 @@ class PageHome(QWidget, BindableObject):
         return None
 
     def initialize_binding(self) -> None:
-        self.binding(self.labelName, self.vm.username)
+        self.binding_value(self.labelName, self.vm.username)
         converter = ToStrConverter(str, str)
         converter.convert(8)
-        self.binding(self.entryName, self.vm.username)
-        self.binding(self.checkNumbers, self.vm.state)
-        self.binding(self.spinVoltage, self.vm.voltage)
-        self.binding(
+        self.binding_value(self.entryName, self.vm.username)
+        self.binding_value(self.checkNumbers, self.vm.state)
+        self.binding_value(self.spinVoltage, self.vm.voltage, use_percentage=True)
+        self.binding_value(
             self.labelVoltage, self.vm.voltage, string_format="Updated: {:5.10f}"
         )
-        self.binding(self.spinVoltage, self.vm.hide, state="visibility")
-        self.binding(self.spinCapacity, self.vm.capacity)
-        self.binding(self.spinEnergy, self.vm.energy)
-
+        self.binding_state(self.spinVoltage, self.vm.hide, prop="visibility")
+        self.binding_value(self.spinCapacity, self.vm.capacity)
+        self.binding_value(self.spinEnergy, self.vm.energy)
         self.binding_command(self.buttonCall, RelayCommand(self.display_information))
 
         self.binding_combobox(
             self.cboxNames, self.vm.user_infos, False, display_name="infos"
         )
         self.binding_combobox_selection(self.cboxNames, self.vm.user)
-        self.binding(self.entry_for_number, self.vm.counter)
+        self.binding_value(self.entry_for_number, self.vm.counter)
         return None
 
     def display_information(self):
