@@ -46,6 +46,7 @@ class PageHome(QWidget, BindableObject):
         self.entry_for_number = QLineEdit()
 
         self.buttonCall = QPushButton("Caller")
+        self.buttonNewCommand = QPushButton("Test New Command")
         # self.buttonCall.setProperty()
 
         layout.addWidget(QLabel("<h2>Observables Str Properties</h2>"))
@@ -60,6 +61,7 @@ class PageHome(QWidget, BindableObject):
 
         layout.addWidget(QLabel("<h2>Relayables Properties Sections</h2>"))
         layout.addWidget(self.buttonCall)
+        layout.addWidget(self.buttonNewCommand)
         layout.addWidget(QLabel("<h2>Observables Collections</h2>"))
         layout.addWidget(self.cboxNames)
         layout.addWidget(self.entry_cbox_value)
@@ -83,7 +85,8 @@ class PageHome(QWidget, BindableObject):
         self.binding_value(self.spinCapacity, self.vm.capacity)
         self.binding_value(self.spinEnergy, self.vm.energy)
         self.binding_command(self.buttonCall, RelayCommand(self.display_information))
-
+        # self.binding_command(self.buttonNewCommand, self.vm.command_test_new_command)
+        self.binding_rcommand(self.buttonNewCommand, self.vm.inner_new_command)
         self.binding_combobox(
             self.cboxNames, self.vm.user_infos, False, display_name="infos"
         )

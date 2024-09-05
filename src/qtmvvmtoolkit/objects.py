@@ -1,5 +1,6 @@
 # coding:utf-8
 
+from signal import raise_signal
 import typing
 import warnings
 
@@ -18,7 +19,7 @@ from qtpy.QtWidgets import (
     QWidget,
 )
 
-from qtmvvmtoolkit.commands import RelayCommand
+from qtmvvmtoolkit.commands import RCommand, RelayCommand
 from qtmvvmtoolkit.inputs import (
     ComputedObservableProperty,
     ObservableCollection,
@@ -35,6 +36,16 @@ class BindableObject(QObject):
     ) -> None:
         super().__init__(parent)
         return
+
+    def initialize_components(self) -> None:
+        raise NotImplementedError(
+            "Please, redefine this function, and call it in the init"
+        )
+
+    def initialize_bindings(self) -> None:
+        raise NotImplementedError(
+            "Please, redefine this function, and call it in the init"
+        )
 
     def binding_state(
         self,
@@ -70,7 +81,7 @@ class BindableObject(QObject):
 
         match widget:
             case QLineEdit():
-                self._binding_lineedit(widget, observable)
+                self._binding_lineedit(widget, observable, bindings)
             case QLabel():
                 self._binding_label(widget, observable, string_format)
             case QSpinBox():
@@ -107,6 +118,24 @@ class BindableObject(QObject):
             widget.clicked.connect(command)
         if isinstance(widget, QRadioButton):
             widget.clicked.connect(command)
+        return None
+
+    def binding_rcommand(
+        self,
+        widget: QObject,
+        command: RCommand,
+    ) -> None:
+        match widget:
+            case QToolButton():
+                widget.triggered.connect(command)
+            case QPushButton():
+                widget.clicked.connect(command)
+            case QRadioButton():
+                widget.clicked.connect(command)
+            case QAction():
+                widget.triggered.connect(command)
+            case _:
+                raise Exception(f"Cant bind this widget: {widget.__class__}")
         return None
 
     def binding_combobox_selection(
@@ -154,7 +183,7 @@ class BindableObject(QObject):
         widget: QLineEdit,
         observable: typing.Union[ObservableProperty[T], ComputedObservableProperty[T]],
         string_format: str | None = None,
-        bindings: typing.Literal["on-typing", "on-typed"] = "on-typed",
+        bindings: typing.Literal["on-typing", "on-typed"] = "on-typing",
         disable_editing: bool = False,
     ) -> None:
         _type: typing.Type = observable.__orig_class__.__args__[0]
@@ -163,7 +192,6 @@ class BindableObject(QObject):
             widget: QLineEdit,
             observable: ObservableProperty[typing.Any],
         ) -> None:
-            print("called")
             _type: typing.Type = observable.__orig_class__.__args__[0]
             try:
                 _value = _type(eval(widget.text()))
@@ -184,34 +212,34 @@ class BindableObject(QObject):
             if bindings == "on-typed":
                 widget.editingFinished.connect(lambda: observable.set(widget.text()))
 
-            if string_format:
-                observable.valueChanged.connect(
-                    lambda value: widget.setText(string_format.format(value))
-                )
-                observable.valueChanged.emit(observable.get())
-                return
+            # if string_format:
+            #     observable.valueChanged.connect(
+            #         lambda value: widget.setText(string_format.format(value))
+            #     )
+            #     observable.valueChanged.emit(observable.get())
+            #     return
 
             observable.valueChanged.connect(widget.setText)
             observable.valueChanged.emit(observable.get())
 
         if _type in [int, float]:
             if bindings == "on-typing":
-                # widget.textChanged.connect(observable.set)
                 widget.textChanged.connect(
                     lambda: __handle_textedit_binding(widget, observable)
                 )
                 ...
             if bindings == "on-typed":
-                # widget.editingFinished.connect(lambda: observable.set(widget.text()))
                 widget.editingFinished.connect(
                     lambda: __handle_textedit_binding(widget, observable)
                 )
+
             if string_format:
                 observable.valueChanged.connect(
                     lambda value: widget.setText(string_format.format(value))
                 )
                 observable.valueChanged.emit(observable.get())
                 return
+
             observable.valueChanged.connect(lambda value: widget.setText(str(value)))
             observable.valueChanged.emit(observable.get())
         return None

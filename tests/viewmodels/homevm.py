@@ -4,6 +4,7 @@ import string
 
 from messages.hellomessage import HelloMessage, StateChangedMessage
 
+from qtmvvmtoolkit.commands import rcommand
 from qtmvvmtoolkit.inputs import (
     ComputedObservableProperty,
     ObservableCollection,
@@ -47,7 +48,10 @@ class HomeViewModel:
             [User(name=f"user-{index}", email=f"email-{index}") for index in range(10)]
         )
 
-        # self.changed = RelayableProperty()
+        self.in_name = "in people"
+        self.inner_new_command = rcommand(name=self.in_name)(
+            self.command_test_new_command
+        )
 
         Messenger.Default.register(HelloMessage)
         Messenger.Default.register(StateChangedMessage)
@@ -66,6 +70,12 @@ class HomeViewModel:
 
         # self.hide.set(not self.hide.get())
         return None
+
+    @rcommand(name="viktor")
+    def command_test_new_command(self, name: str | None = None):
+        print("new command testing is working")
+        print(f"==>{name}")
+        return
 
     def fill_numbers(self) -> None:
         Messenger.Default.send(HelloMessage("new message sent"))

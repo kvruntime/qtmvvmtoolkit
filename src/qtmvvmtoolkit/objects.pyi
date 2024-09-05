@@ -12,12 +12,11 @@ from qtpy.QtWidgets import (
     QWidget,
 )
 
-from qtmvvmtoolkit.commands import RelayCommand
+from qtmvvmtoolkit.commands import RCommand, RelayCommand
 from qtmvvmtoolkit.inputs import (
     ComputedObservableProperty,
     ObservableCollection,
     ObservableProperty,
-    # RelayableProperty,
 )
 
 T = typing.TypeVar("T")
@@ -45,11 +44,11 @@ class BindableObject(QObject):
         bindings: typing.Literal["on-typing", "on-typed"] = "on-typed",
         use_percentage: bool | None = None,
     ) -> None: ...
-    # def binding_relayable(
-    #     self,
-    #     func: typing.Callable[[], None],
-    #     relayable: RelayableProperty,
-    # ) -> None: ...
+    def binding_rcommand(
+        self,
+        widget: QObject,
+        command: RCommand,
+    ) -> None: ...
     def binding_command(
         self,
         widget: typing.Union[
