@@ -49,3 +49,15 @@ class ToStrConverter(IValueConverter):
         self, value: object, parameter: typing.Optional[object] = None
     ) -> object:
         return str(value).capitalize()
+
+
+class IConverter:
+    def __init__(self) -> None:
+        pass
+
+    def convert(
+        self,
+        targetType: type,
+        value: object | None = None,
+        parameter: object | None = None,
+    ) -> None: ...

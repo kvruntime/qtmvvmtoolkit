@@ -11,7 +11,7 @@ build-backend = "pdm.backend"
 [project]
 name = "qtmvvmtoolkit"
 authors = [
-    {name = "kvruntime", email = "email@email.com"},
+    {name = "kvruntime", email = "kvruntime@email.com"},
 ]
 description = "Description here..."
 readme = "README.md"
