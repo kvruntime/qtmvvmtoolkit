@@ -1,6 +1,5 @@
 # coding:utf-8
 
-from signal import raise_signal
 import typing
 import warnings
 
@@ -17,6 +16,9 @@ from qtpy.QtWidgets import (
     QSpinBox,
     QToolButton,
     QWidget,
+    QTextEdit,
+    QDateTimeEdit,
+    QDateEdit,
 )
 
 from qtmvvmtoolkit.commands import RCommand, RelayCommand
@@ -76,12 +78,12 @@ class BindableObject(QObject):
         use_percentage: bool | None = None,
     ) -> None:
         # use percentage is only reserved for qspinbox & qdoublespinbox
-        # to know the type of observable
-        _type: type = typing.get_args(observable.__orig_class__)[0]
+        # NOTE: this is about to know the type of observable
+        # _type: type = typing.get_args(observable.__orig_class__)[0]
 
         match widget:
             case QLineEdit():
-                self._binding_lineedit(widget, observable, bindings)
+                self._binding_lineedit(widget, observable, bindings=bindings)
             case QLabel():
                 self._binding_label(widget, observable, string_format)
             case QSpinBox():
@@ -90,8 +92,14 @@ class BindableObject(QObject):
                 self._binding_doublespinbox(widget, observable, use_percentage)
             case QCheckBox():
                 self._binding_checkbox(widget, observable)
+            case QTextEdit():
+                print("Not available")
+            case QDateEdit():
+                print("Not available")
+            case QDateTimeEdit():
+                print("Not available")
             case _:
-                print("unhandled")
+                raise Exception("unhandled case.")
         return None
 
     # def binding_relayable(
@@ -182,6 +190,7 @@ class BindableObject(QObject):
         self,
         widget: QLineEdit,
         observable: typing.Union[ObservableProperty[T], ComputedObservableProperty[T]],
+        *,
         string_format: str | None = None,
         bindings: typing.Literal["on-typing", "on-typed"] = "on-typing",
         disable_editing: bool = False,
@@ -194,7 +203,13 @@ class BindableObject(QObject):
         ) -> None:
             _type: typing.Type = observable.__orig_class__.__args__[0]
             try:
-                _value = _type(eval(widget.text()))
+                _value: typing.Any
+                if _type in [int, float]:
+                    _value = _type(eval(widget.text()))
+                elif _type in [str]:
+                    _value = _type(widget.text())
+                else:
+                    _value = ""
                 observable.set(_value)
             except NameError:
                 widget.clear()
@@ -205,12 +220,12 @@ class BindableObject(QObject):
         if disable_editing:
             widget.setReadOnly(disable_editing)
 
-        if _type == str:
-            if bindings == "on-typing":
-                widget.textChanged.connect(observable.set)
+        # if _type == str:
+        if bindings == "on-typing":
+            widget.textChanged.connect(observable.set)
 
-            if bindings == "on-typed":
-                widget.editingFinished.connect(lambda: observable.set(widget.text()))
+        if bindings == "on-typed":
+            widget.editingFinished.connect(lambda: observable.set(widget.text()))
 
             # if string_format:
             #     observable.valueChanged.connect(
@@ -222,18 +237,19 @@ class BindableObject(QObject):
             observable.valueChanged.connect(widget.setText)
             observable.valueChanged.emit(observable.get())
 
-        if _type in [int, float]:
-            if bindings == "on-typing":
-                widget.textChanged.connect(
-                    lambda: __handle_textedit_binding(widget, observable)
-                )
-                ...
-            if bindings == "on-typed":
-                widget.editingFinished.connect(
-                    lambda: __handle_textedit_binding(widget, observable)
-                )
+            # if _type in [int, float]:
+            #     if bindings == "on-typing":
+            #         widget.textChanged.connect(
+            #             lambda: __handle_textedit_binding(widget, observable)
+            #         )
+            #         ...
+            #     if bindings == "on-typed":
+            #         widget.editingFinished.connect(
+            #             lambda: __handle_textedit_binding(widget, observable)
+            #         )
 
             if string_format:
+                widget.setReadOnly(True)
                 observable.valueChanged.connect(
                     lambda value: widget.setText(string_format.format(value))
                 )
