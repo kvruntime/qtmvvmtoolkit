@@ -85,12 +85,19 @@ class PageHome(QWidget, BindableObject):
         self.binding_value(self.spinCapacity, self.vm.capacity)
         self.binding_value(self.spinEnergy, self.vm.energy)
         self.binding_command(self.buttonCall, RelayCommand(self.display_information))
-        # self.binding_command(self.buttonNewCommand, self.vm.command_test_new_command)
-        self.binding_rcommand(self.buttonNewCommand, self.vm.inner_new_command)
-        self.binding_combobox(
-            self.cboxNames, self.vm.user_infos, False, display_name="infos"
+        self.binding_command(self.buttonNewCommand, self.vm.command_test_new_command)
+        # self.binding_rcommand(self.buttonNewCommand, self.vm.inner_new_command)
+        # self.binding_combobox(
+        #     self.cboxNames, self.vm.user_infos, False, display_name="infos"
+        # )
+        # self.binding_combobox_selection(self.cboxNames, self.vm.user)
+        self.binding_selection(
+            self.cboxNames,
+            self.vm.user_infos,
+            selection_default=False,
+            display_name="infos",
+            observable_value=self.vm.user,
         )
-        self.binding_combobox_selection(self.cboxNames, self.vm.user)
         self.binding_value(self.entry_for_number, self.vm.counter)
         return None
 
@@ -101,4 +108,5 @@ class PageHome(QWidget, BindableObject):
 
     def launch_operation(self):
         self.vm.hide.set(not self.vm.hide.get())
+        print(self.vm.user.get())
         return None

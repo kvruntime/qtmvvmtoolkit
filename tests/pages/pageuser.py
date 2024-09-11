@@ -11,7 +11,12 @@ class PageUser(QWidget, Ui_PageUser, BindableObject):
         self.setupUi(self)  # type:ignore
         self.vm = UserViewModel()
 
-        self.binding_value(self.entryName, self.vm.user.name)
-        self.binding_value(self.spinAge, self.vm.user.age)
-        self.buttonDisplay.clicked.connect(self.vm.command_display_user)
+        self.initialize_bindings()
         return
+
+    def initialize_bindings(self) -> None:
+        print(f":::binding {self.vm.user}")
+        self.binding_value(self.entryName, self.vm.user.name, bindings="on-typing")
+        self.binding_value(self.spinAge, self.vm.user.age)
+        self.binding_command(self.buttonDisplay, self.vm.command_display_user)
+        return None

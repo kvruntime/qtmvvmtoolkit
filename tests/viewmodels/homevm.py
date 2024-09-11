@@ -71,11 +71,16 @@ class HomeViewModel:
         # self.hide.set(not self.hide.get())
         return None
 
-    @rcommand(name="viktor")
+    # @rcommand(name="viktor")
     def command_test_new_command(self, name: str | None = None):
         print("new command testing is working")
         print(f"==>{name}")
+        # print(self.energy.get())
         return
+
+    def long_running_task(self) -> None:
+        for _ in range(1_000_000_000):
+            print(f":::still working ....{_}")
 
     def fill_numbers(self) -> None:
         Messenger.Default.send(HelloMessage("new message sent"))

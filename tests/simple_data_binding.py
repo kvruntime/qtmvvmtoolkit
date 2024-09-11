@@ -56,13 +56,17 @@ class SimpleDataBindingWidget(QWidget, BindableObject):
 
     def initialize_bindings(self) -> None:
         self.binding_value(
-            self.lineedit_username, self.vm.username, bindings="on-typing"
+            self.lineedit_username,
+            self.vm.username,
+            bindings="on-typed",
         )
         self.binding_value(self.lineedit_email, self.vm.email, bindings="on-typed")
         self.binding_value(self.spin_age, self.vm.age)
         self.binding_value(self.check_confirm, self.vm.confirm)
         #
-        self.binding_value(self.label_username, self.vm.username)
+        self.binding_value(
+            self.label_username, self.vm.username, string_format="{} (new user)"
+        )
         self.binding_value(self.label_email, self.vm.email)
         self.binding_value(self.label_age, self.vm.age)
         self.binding_value(self.label_confirm, self.vm.confirm)
