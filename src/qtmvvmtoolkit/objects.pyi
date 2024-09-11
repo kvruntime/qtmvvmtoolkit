@@ -26,6 +26,8 @@ class BindableObject(QObject):
         self,
         parent: typing.Optional[QWidget] = None,
     ) -> None: ...
+    def initialize_components(self) -> None: ...
+    def initialize_bindings(self) -> None: ...
     def binding_state(
         self,
         widget: QWidget,
@@ -71,6 +73,19 @@ class BindableObject(QObject):
         self,
         widget: QComboBox,
         observable: ObservableCollection[typing.Any],
+        selection_default: bool = False,
+        display_name: typing.Optional[str] = None,
+        visibles_items: int = 7,
+    ) -> None: ...
+    def binding_selection(
+        self,
+        widget: QComboBox,
+        observable: ObservableCollection[T],
+        *,
+        observable_value: typing.Union[
+            ObservableProperty[typing.Any],
+            ComputedObservableProperty[typing.Any],
+        ],
         selection_default: bool = False,
         display_name: typing.Optional[str] = None,
         visibles_items: int = 7,

@@ -189,19 +189,30 @@ class ObservableCollection(QObject, typing.Generic[_T]):
         return iter(self.collection)
 
 
-def observable_object(target_class: typing.Type[object]):
+class IObservableObject:
+    def get_attribute(self) -> typing.Dict[str, typing.Any]:
+        return {k: v.get() for k, v in self.__dict__.items()}
+
+    def set_attribute(self, data: typing.Dict[str, typing.Any]) -> None:
+        for k, v in self.__dict__.items():
+            if k in data:
+                v.set(data.get(k))
+        return None
+
+
+def observable_object(target_class: typing.Type[IObservableObject]):
     # def wrapper(*args: typing.List[typing.Any], **kwargs: typing.Dict[str, typing.Any]):
     warnings.warn(
         "WARN: this is preview feature & should in instable & change in future"
     )
 
     # create custom function to retrieve basic attribute
-    def get_attribute(self) -> typing.Dict[str, typing.Any]:
-        return {k: v.get() for k, v in self.__dict__.items()}
+    # def get_attribute(self) -> typing.Dict[str, typing.Any]:
+    #     return {k: v.get() for k, v in self.__dict__.items()}
 
-    target_class.get_attribute = get_attribute
+    # target_class.get_attribute = get_attribute
 
-    def wrapper(*args, **kwargs):
+    def wrapper(*args: typing.List[typing.Any], **kwargs: typing.Dict[str, typing.Any]):
         instance = target_class(*args, **kwargs)
         for k, v in instance.__dict__.items():
             setattr(instance, k, ObservableProperty[type(v)](v))

@@ -146,6 +146,42 @@ class BindableObject(QObject):
                 raise Exception(f"Cant bind this widget: {widget.__class__}")
         return None
 
+    def binding_selection(
+        self,
+        widget: QComboBox,
+        observable: ObservableCollection[T],
+        *,
+        observable_value: typing.Union[
+            ObservableProperty[typing.Any],
+            ComputedObservableProperty[typing.Any],
+        ]
+        | None = None,
+        selection_default: bool = False,
+        display_name: typing.Optional[str] = None,
+        visibles_items: int = 7,
+    ) -> None:
+        widget.setDuplicatesEnabled(False)
+        widget.setMaxVisibleItems(visibles_items)
+        widget.clear()
+
+        observable.valueChanged.connect(widget.clear)
+        observable.valueChanged.connect(
+            lambda values: self._fill_combobox_items(widget, values, display_name)
+        )
+        if selection_default:
+            observable.valueChanged.emit(observable.collection)
+            # widget.setCurrentIndex(0)
+        else:
+            observable.valueChanged.emit(observable.collection)
+            widget.setCurrentIndex(-1)
+
+        if observable_value:
+            widget.currentTextChanged.connect(
+                lambda: observable_value.set(widget.currentData())
+            )
+            widget.currentTextChanged.emit(widget.currentText())
+        return
+
     def binding_combobox_selection(
         self,
         widget: QComboBox,
@@ -154,7 +190,9 @@ class BindableObject(QObject):
             ComputedObservableProperty[typing.Any],
         ],
     ) -> None:
-        warnings.warn("WARN: preview feature")
+        warnings.warn(
+            "WARN: depracted feature, will be removed soon [use instead <binding_selection> method]"
+        )
         widget.currentTextChanged.connect(lambda: observable.set(widget.currentData()))
         widget.currentTextChanged.emit(widget.currentText())
         # widget.currentTextChanged.emit(widget.currentData())
@@ -169,6 +207,9 @@ class BindableObject(QObject):
         display_name: typing.Optional[str] = None,
         visibles_items: int = 7,
     ) -> None:
+        warnings.warn(
+            "WARN: depracted feature, will be removed soon [use instead <binding_selection> method]"
+        )
         widget.setDuplicatesEnabled(False)
         widget.setMaxVisibleItems(visibles_items)
         widget.clear()
@@ -211,6 +252,7 @@ class BindableObject(QObject):
                 else:
                     _value = ""
                 observable.set(_value)
+
             except NameError:
                 widget.clear()
             except SyntaxError:
@@ -220,44 +262,26 @@ class BindableObject(QObject):
         if disable_editing:
             widget.setReadOnly(disable_editing)
 
-        # if _type == str:
         if bindings == "on-typing":
-            widget.textChanged.connect(observable.set)
-
+            widget.textChanged.connect(
+                lambda: __handle_textedit_binding(widget, observable)
+            )
+            ...
         if bindings == "on-typed":
-            widget.editingFinished.connect(lambda: observable.set(widget.text()))
+            widget.editingFinished.connect(
+                lambda: __handle_textedit_binding(widget, observable)
+            )
 
-            # if string_format:
-            #     observable.valueChanged.connect(
-            #         lambda value: widget.setText(string_format.format(value))
-            #     )
-            #     observable.valueChanged.emit(observable.get())
-            #     return
-
-            observable.valueChanged.connect(widget.setText)
+        if string_format:
+            widget.setReadOnly(True)
+            observable.valueChanged.connect(
+                lambda value: widget.setText(string_format.format(value))
+            )
             observable.valueChanged.emit(observable.get())
+            return
 
-            # if _type in [int, float]:
-            #     if bindings == "on-typing":
-            #         widget.textChanged.connect(
-            #             lambda: __handle_textedit_binding(widget, observable)
-            #         )
-            #         ...
-            #     if bindings == "on-typed":
-            #         widget.editingFinished.connect(
-            #             lambda: __handle_textedit_binding(widget, observable)
-            #         )
-
-            if string_format:
-                widget.setReadOnly(True)
-                observable.valueChanged.connect(
-                    lambda value: widget.setText(string_format.format(value))
-                )
-                observable.valueChanged.emit(observable.get())
-                return
-
-            observable.valueChanged.connect(lambda value: widget.setText(str(value)))
-            observable.valueChanged.emit(observable.get())
+        observable.valueChanged.connect(lambda value: widget.setText(str(value)))
+        observable.valueChanged.emit(observable.get())
         return None
 
     def _binding_label(
