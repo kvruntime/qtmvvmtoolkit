@@ -1,10 +1,10 @@
 {
-  "name": "gui-app",
+  "name": "qtmvvmtoolkit",
   "dockerComposeFile": [
-    "../docker-compose.yml"
+    "./docker-compose.yml"
   ],
   "workspaceFolder": "/workspaces/qtmvvmtoolkit",
-  "service": "gui-app",
+  "service": "qtmvvmtoolkit",
   "features": {
     "ghcr.io/nils-geistmann/devcontainers-features/zsh:0": {
       "setLocale": true,

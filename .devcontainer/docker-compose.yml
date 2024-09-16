@@ -1,6 +1,6 @@
 services:
-  gui-app:
-    image: gui-app-image
+  qtmvvmtoolkit:
+    image: qtmvvmtoolkit
     build:
       context: ./.devcontainer
       dockerfile: Dockerfile
@@ -10,4 +10,4 @@ services:
     environment:
       - DISPLAY=host.docker.internal:0
     volumes:
-      - .:/workspaces/qtmvvmtoolkit:rw
+      - ..:/workspaces/qtmvvmtoolkit:cached

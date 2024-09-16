@@ -1,11 +1,10 @@
 # coding:utf-8
-from qtpy.QtGui import *
-from qtpy.QtWidgets import *
-from viewmodels.homevm import HomeViewModel
-
 from qtmvvmtoolkit.commands import RelayCommand
 from qtmvvmtoolkit.converters import ToStrConverter
 from qtmvvmtoolkit.objects import BindableObject
+from qtpy.QtGui import *
+from qtpy.QtWidgets import *
+from viewmodels.homevm import HomeViewModel
 
 
 class PageHome(QWidget, BindableObject):
@@ -38,7 +37,8 @@ class PageHome(QWidget, BindableObject):
         self.spinVoltage = QSpinBox()
         self.spinEnergy = QDoubleSpinBox()
         self.spinEnergy.setReadOnly(True)
-        self.spinEnergy.setMaximum(99990)
+        self.spinEnergy.setMaximum(9999999)
+        self.spinVoltage.setMaximum(9999999)
         self.checkNumbers = QCheckBox(self)
 
         self.cboxNames = QComboBox(self)
@@ -46,6 +46,7 @@ class PageHome(QWidget, BindableObject):
         self.entry_for_number = QLineEdit()
 
         self.buttonCall = QPushButton("Caller")
+        self.buttonNewCommand = QPushButton("Test New Command")
         # self.buttonCall.setProperty()
 
         layout.addWidget(QLabel("<h2>Observables Str Properties</h2>"))
@@ -60,6 +61,7 @@ class PageHome(QWidget, BindableObject):
 
         layout.addWidget(QLabel("<h2>Relayables Properties Sections</h2>"))
         layout.addWidget(self.buttonCall)
+        layout.addWidget(self.buttonNewCommand)
         layout.addWidget(QLabel("<h2>Observables Collections</h2>"))
         layout.addWidget(self.cboxNames)
         layout.addWidget(self.entry_cbox_value)
@@ -70,32 +72,33 @@ class PageHome(QWidget, BindableObject):
         return None
 
     def initialize_binding(self) -> None:
-        self.binding_label_string(self.labelName, self.vm.username)
+        self.binding_value(self.labelName, self.vm.username)
         converter = ToStrConverter(str, str)
         converter.convert(8)
-        self.binding_textedit(
-            self.entryName,
-            self.vm.username,
+        self.binding_value(self.entryName, self.vm.username)
+        self.binding_value(self.checkNumbers, self.vm.state)
+        self.binding_value(self.spinVoltage, self.vm.voltage, use_percentage=True)
+        self.binding_value(
+            self.labelVoltage, self.vm.voltage, string_format="Updated: {:5.10f}"
         )
-        self.binding_checkbox(self.checkNumbers, self.vm.state)
-        self.binding_spinbox(self.spinVoltage, self.vm.voltage)
-        self.binding_label_number(
-            self.labelVoltage, self.vm.voltage, lambda value: f"{value:5.2f} v"
-        )
-        self.binding_widget(self.spinVoltage, self.vm.hide, "visibility")
-        self.binding_doublespinbox(self.spinCapacity, self.vm.capacity)
-        self.binding_doublespinbox(self.spinEnergy, self.vm.energy)
-
+        self.binding_state(self.spinVoltage, self.vm.hide, prop="visibility")
+        self.binding_value(self.spinCapacity, self.vm.capacity)
+        self.binding_value(self.spinEnergy, self.vm.energy)
         self.binding_command(self.buttonCall, RelayCommand(self.display_information))
-
-        self.binding_combobox(
-            self.cboxNames, self.vm.user_infos, False, display_name="infos"
+        self.binding_command(self.buttonNewCommand, self.vm.command_test_new_command)
+        # self.binding_rcommand(self.buttonNewCommand, self.vm.inner_new_command)
+        # self.binding_combobox(
+        #     self.cboxNames, self.vm.user_infos, False, display_name="infos"
+        # )
+        # self.binding_combobox_selection(self.cboxNames, self.vm.user)
+        self.binding_selection(
+            self.cboxNames,
+            self.vm.user_infos,
+            selection_default=False,
+            display_name="infos",
+            observable_value=self.vm.user,
         )
-        self.binding_combobox_selection(self.cboxNames, self.vm.user)
-        # self.vm.user.binding(lambda u: print(f"user=>{u}"))
-        # self.vm.user.binding(lambda u: self.entry_cbox_value.setText(u.name))
-        self.binding_textedit(self.entry_for_number, self.vm.counter)
-        # self.binding_combobox_realvalue(self.cboxNames, self.vm.username)
+        self.binding_value(self.entry_for_number, self.vm.counter)
         return None
 
     def display_information(self):
@@ -105,4 +108,5 @@ class PageHome(QWidget, BindableObject):
 
     def launch_operation(self):
         self.vm.hide.set(not self.vm.hide.get())
+        print(self.vm.user.get())
         return None

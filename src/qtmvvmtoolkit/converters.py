@@ -21,18 +21,15 @@ class IValueConverter(typing.Protocol):
     source_type: type
     target_type: type
 
-    def __init__(self, source_type: type, target_type: type) -> None:
-        ...
+    def __init__(self, source_type: type, target_type: type) -> None: ...
 
     def convert(
         self, value: object, parameter: typing.Optional[object] = None
-    ) -> object:
-        ...
+    ) -> object: ...
 
     def convert_back(
         self, value: object, parameter: typing.Optional[object] = None
-    ) -> object:
-        ...
+    ) -> object: ...
 
 
 class ToStrConverter(IValueConverter):
@@ -52,3 +49,15 @@ class ToStrConverter(IValueConverter):
         self, value: object, parameter: typing.Optional[object] = None
     ) -> object:
         return str(value).capitalize()
+
+
+class IConverter:
+    def __init__(self) -> None:
+        pass
+
+    def convert(
+        self,
+        targetType: type,
+        value: object | None = None,
+        parameter: object | None = None,
+    ) -> None: ...
