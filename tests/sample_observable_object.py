@@ -1,12 +1,10 @@
 # coding:utf-8
 import typing
 
-from pydantic import BaseModel
 from context import register_package
-from qtpy.QtCore import QCoreApplication
 
 register_package()
-from qtmvvmtoolkit.inputs import ObservableObject
+from qtmvvmtoolkit.inputs import observable_object
 
 
 def handle_changes(name: str, value: typing.Any) -> None:
@@ -14,6 +12,7 @@ def handle_changes(name: str, value: typing.Any) -> None:
     return
 
 
+@observable_object
 class User:
     def __init__(self, name: str, age: int) -> None:
         self.name = name
@@ -21,20 +20,27 @@ class User:
         return
 
 
-class User2(BaseModel):
-    name: str = "default"
-    age: int = 0
+def main() -> None:
+    from PyQt6.QtWidgets import QApplication, QLineEdit, QPushButton
+
+    user = User("viktor", 26)
+
+    def btn_slot():
+        print(user.get_attributes())
+        return
+
+    app = QApplication([])
+    line = QLineEdit()
+    button = QPushButton("Check Info")
+    user.name.binding(line.setText)
+    user.name.rbinding(line.textChanged)
+    user.name.binding(lambda v: print(f"changed -> {v}"))
+    # user.name.set("c")
+    button.clicked.connect(btn_slot)
+    line.show()
+    button.show()
+    app.exec()
+    return
 
 
-app = QCoreApplication([])
-
-user_val = User2(name="jean", age=20)
-u = ObservableObject(user_val)
-u.valueChanged.connect(handle_changes)
-
-u.set("name", "victor")
-u.set("age", 78)
-u.display_object()
-print(user_val)
-
-app.exec()
+main()

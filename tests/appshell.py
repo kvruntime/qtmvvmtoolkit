@@ -21,9 +21,6 @@ class Routes:
     User: str = "user"
 
 
-from qtpy.QtWidgets import QMainWindow
-
-
 class AppShell(QMainWindow):
     def __init__(self):
         super().__init__()

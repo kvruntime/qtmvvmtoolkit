@@ -1,31 +1,49 @@
 # coding:utf-8
 
-from messages.hellomessage import HelloMessage
 
-from qtmvvmtoolkit.inputs import ObservableObject
-from qtmvvmtoolkit.messenger import Messenger
+from typing import Any, Dict
+from pydantic import BaseModel
+from qtmvvmtoolkit.commands import rcommand
+from qtmvvmtoolkit.inputs import observable_object, IObservableObject
 
 
-class User:
-    def __init__(self, name: str, age: int) -> None:
+@observable_object
+class User(IObservableObject):
+    def __init__(self, name: str = "vik", age: int = 9) -> None:
         self.name = name
         self.age = age
         return
 
 
+@observable_object
+class CUser(IObservableObject):
+    name: str = "vik"
+    age: int = 3
+
+
+class UserInfo(BaseModel, IObservableObject):
+    name: str = "vik"
+    age: int = 25
+
+
+@observable_object
+class UserInfoState(BaseModel, IObservableObject):
+    name: str = "viktor"
+    age: int = 25
+
+    def get_attribute(self) -> Dict[str, Any]:
+        return UserInfo(**super().get_attribute())
+
+
 class UserViewModel:
     def __init__(self):
         super().__init__()
-        self.u = User("victor", 20)
-        self.ou = ObservableObject(self.u)
-        Messenger.Default.use(HelloMessage, self.command_handle_message)
+        self.user = UserInfoState()
+        # Messenger.Default.use(HelloMessage, self.command_handle_message)
+        self.user.set_attribute(dict(age=33))
         return
 
+    # @rcommand()
     def command_display_user(self) -> None:
-        print(self.ou.display_object())
-        print(self.u.__dict__)
+        print(self.user.get_attribute())
         return None
-
-    def command_handle_message(self, message: str) -> None:
-        print(f"handle message==>{message}")
-        return

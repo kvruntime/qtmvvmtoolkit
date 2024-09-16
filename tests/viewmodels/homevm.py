@@ -2,13 +2,13 @@
 import random
 import string
 
-from messages.hellomessage import HelloMessage
+from messages.hellomessage import HelloMessage, StateChangedMessage
 
+from qtmvvmtoolkit.commands import rcommand
 from qtmvvmtoolkit.inputs import (
     ComputedObservableProperty,
     ObservableCollection,
     ObservableProperty,
-    RelayableProperty,
 )
 from qtmvvmtoolkit.messenger import Messenger
 
@@ -28,7 +28,7 @@ class User(BaseModel):
 class HomeViewModel:
     def __init__(self):
         super().__init__()
-        self.numbers = ObservableCollection[list[str]](list(range(10)))
+        self.numbers = ObservableCollection[int](list(range(10)))
         self.valid_numbers = ComputedObservableProperty[bool](
             self.update_valid_numbers(), [self.numbers], self.update_valid_numbers
         )
@@ -48,9 +48,13 @@ class HomeViewModel:
             [User(name=f"user-{index}", email=f"email-{index}") for index in range(10)]
         )
 
-        self.changed = RelayableProperty()
+        self.in_name = "in people"
+        self.inner_new_command = rcommand(name=self.in_name)(
+            self.command_test_new_command
+        )
 
         Messenger.Default.register(HelloMessage)
+        Messenger.Default.register(StateChangedMessage)
         return
 
     def update_valid_numbers(self) -> bool:
@@ -61,9 +65,22 @@ class HomeViewModel:
         return self.voltage.get() * self.capacity.get()
 
     def command_call_relay(self):
-        self.changed.call()
+        # self.changed.call()
+        Messenger.Default.send(StateChangedMessage(True))
+
         # self.hide.set(not self.hide.get())
         return None
+
+    # @rcommand(name="viktor")
+    def command_test_new_command(self, name: str | None = None):
+        print("new command testing is working")
+        print(f"==>{name}")
+        # print(self.energy.get())
+        return
+
+    def long_running_task(self) -> None:
+        for _ in range(1_000_000_000):
+            print(f":::still working ....{_}")
 
     def fill_numbers(self) -> None:
         Messenger.Default.send(HelloMessage("new message sent"))

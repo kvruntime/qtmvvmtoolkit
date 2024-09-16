@@ -12,7 +12,6 @@ from qtpy.QtWidgets import (
 
 
 class Navigator:
-
     def __init__(self) -> None:
         self._outlet: typing.Union[QTabWidget, QStackedWidget]
         self._routes: typing.Dict[str, QWidget] = {}
